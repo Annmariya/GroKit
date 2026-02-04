@@ -9,6 +9,7 @@ from django.utils import timezone
 from datetime import date
 from django.conf import settings
 from django.core.mail import send_mail
+# new point
 
 # Create your views here.
 def Myprofile (request):
