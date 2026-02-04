@@ -1,0 +1,234 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+*{ box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+.page-wrap{
+    min-height:85vh;
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:linear-gradient(white,#ffffff);
+}
+
+.payment-card{
+    background:white;
+    width:100%;
+    max-width:800px;
+    border-radius:24px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.15);
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    overflow:hidden;
+}
+
+/* LEFT PANEL */
+.card-left{
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+    color:white;
+    padding:35px 30px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.card-left h2{
+    font-size:26px;
+    margin-bottom:10px;
+}
+
+.amount-display{
+    margin-top:25px;
+    background:rgba(255,255,255,0.15);
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+}
+
+.amount-display span{
+    font-size:14px;
+}
+
+.amount-display h1{
+    font-size:34px;
+    margin-top:5px;
+}
+
+/* RIGHT PANEL */
+.card-right{
+    padding:35px 35px;
+}
+
+.card-right h3{
+    font-size:22px;
+    margin-bottom:18px;
+}
+
+.payment-modes{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.mode{
+    flex:1;
+    border:2px solid #ddd;
+    border-radius:12px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.mode i{
+    font-size:22px;
+    color:#11998e;
+}
+
+.mode p{
+    font-size:13px;
+    margin-top:4px;
+}
+
+.mode.active,
+.mode:hover{
+    border-color:#38ef7d;
+    background:#f0fff8;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    font-size:13px;
+    color:#555;
+    margin-bottom:5px;
+    display:block;
+}
+
+input{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+.pay-btn{
+    margin-top:12px;
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+    color:white;
+    font-size:16px;
+    font-weight:600;
+}
+
+.secure-note{
+    text-align:center;
+    margin-top:12px;
+    font-size:13px;
+    color:#777;
+}
+
+@media(max-width:800px){
+    .payment-card{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+<div class="page-wrap">
+
+    <div class="payment-card">
+
+        <!-- LEFT -->
+        <div class="card-left">
+            <h2><i class="fas fa-shopping-basket"></i> GroKit</h2>
+            <p>Fast • Fresh • Secure Payment</p>
+
+            <div class="amount-display">
+                <span>Total Amount</span>
+                <h1>₹ {{bookingdata.booking_amount}}</h1>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="card-right">
+
+            <h3>Payment </h3>
+
+            <div class="payment-modes">
+                <div class="mode active">
+                    <i class="fas fa-credit-card"></i>
+                    <p>Card</p>
+                </div>
+                <div class="mode">
+                    <i class="fas fa-qrcode"></i>
+                    <p>UPI</p>
+                </div>
+                <div class="mode">
+                    <i class="fas fa-wallet"></i>
+                    <p>Wallet</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input type="text" value="{{bookingdata.user.user_name}}" readonly>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 345">
+                    </div>
+
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="password" placeholder="***">
+                    </div>
+                </div>
+
+                <button type="submit" class="pay-btn">
+                    <i class="fas fa-lock"></i> Pay Securely
+                </button>
+
+            </form>
+
+            <div class="secure-note">
+                <i class="fas fa-shield-alt"></i>100% Secure Process
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'User:Payment' %}"
+</script>
+{% endif %}
+
+{% endblock %}

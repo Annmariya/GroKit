@@ -1,0 +1,294 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+.page-wrapper{
+    min-height: 100vh;
+    padding: 60px 0;
+    font-family: 'Inter', sans-serif;
+    /* background: radial-gradient(circle at top left, #ebefed, #c1efce, #c0ecb6); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* PROFILE CARD HORIZONTAL */
+.profile-container{
+    width: 90%;
+    max-width: 950px;
+    display: flex;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 3px solid wheat;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 30px 50px rgba(0,0,0,0.15);
+}
+
+/* LEFT PANEL */
+.profile-left{
+    flex: 1;
+    padding: 50px 30px;
+    text-align: center;
+    background: rgba(30, 41, 59, 0.85);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-left img{
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 5px solid white;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.profile-left h2{
+    margin: 10px 0 6px;
+    font-size: 24px;
+    color:white;
+}
+
+.profile-left p{
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* RIGHT PANEL (Form) */
+.profile-right{
+    flex: 2;
+    padding: 50px 40px;
+}
+
+.profile-right h3{
+    font-size: 26px;
+    margin-bottom: 30px;
+    color: #1e293b;
+}
+
+/* FORM FIELDS */
+.form-group{
+    margin-bottom: 20px;
+}
+
+.form-group label{
+    font-weight: 500;
+    color: #475569;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea{
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid wheat;
+    background: rgba(255,255,255,0.85);
+    font-size: 14px;
+}
+
+.form-group textarea{
+    resize: none;
+}
+
+/* BUTTONS */
+.profile-actions{
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.profile-actions a,
+.profile-actions button{
+    padding: 12px 32px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.profile-actions a:hover,
+.profile-actions button:hover{
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .profile-container{
+        flex-direction: column;
+    }
+    
+    .profile-left, .profile-right{
+        padding: 30px 25px;
+    }
+
+    .profile-actions{
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+    <div class="profile-container">
+
+        <!-- LEFT PANEL -->
+        <div class="profile-left">
+            <img src="{{ userdata.user_photo.url }}" alt="Profile">
+           
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="profile-right">
+            <h3>Edit Profile</h3>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="txt_name" value="{{ userdata.user_name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="txt_email" value="{{ userdata.user_email }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Contact</label>
+                    <input type="text" name="txt_contact" value="{{ userdata.user_contact }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea name="txt_address" rows="3">{{ userdata.user_address }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Change Photo</label>
+                    <input type="file" name="txt_photo">
+                </div>
+
+                <div class="profile-actions">
+                    <a href="{% url 'User:Myprofile' %}">← Back</a>
+                    <button type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% if msg %}
+<style>
+/* Overlay */
+.success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Popup Card */
+.success-popup {
+    background: #ffffff;
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: popupScale 0.3s ease forwards;
+}
+
+/* Icon */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #e7f9ef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    animation: bounce 1s infinite;
+}
+
+.success-icon svg {
+    width: 40px;
+    height: 40px;
+    color: #28a745;
+}
+
+/* Button */
+.success-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.success-btn:hover {
+    background: #218838;
+}
+
+/* Animations */
+@keyframes popupScale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+</style>
+
+<div id="successPopup" class="success-overlay">
+    <div class="success-popup">
+        <div class="success-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 style="color:#333;">Success!</h2>
+        <p style="color:#666; margin-top:8px;">{{ msg }}</p>
+        <button class="success-btn" onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+function closePopup() {
+    window.location.href = "{% url 'User:Myprofile' %}";
+}
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends 'Guest/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+.page-wrapper {
+    padding: 90px 0;
+    display: flex;
+    justify-content: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Main card */
+.register-wrapper {
+    display: flex;
+    width: 1000px; /* slightly wider for 3 columns */
+    min-height: 560px;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.15);
+}
+
+/* Left side */
+.register-left {
+    width: 30%;
+    background: linear-gradient(to bottom, #ed6f21, #f2af06);
+    color: #ffffff;
+    padding: 45px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.register-left h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.register-left p {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Right side */
+.register-right {
+    width: 70%;
+    padding: 40px;
+}
+
+/* Main heading */
+.form-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ff8c42;
+}
+
+.form-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* Section heading */
+.section-title {
+    grid-column: span 3;  /* ⭐ span all 3 columns */
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ff8c42;
+    padding-bottom: 5px;
+    margin-top: 10px;
+}
+
+/* ===== FORM GRID – 3 COLUMNS ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* ⭐ 3 inputs per row */
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Full width fields */
+.form-group.full {
+    grid-column: span 3;  /* ⭐ full row */
+}
+
+/* Labels */
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Inputs – black border */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 2px solid #000;
+    font-size: 14px;
+}
+
+/* Gender */
+.gender-group {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.form-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.form-actions input {
+    padding: 12px 38px;
+    border-radius: 30px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-actions input[type="submit"] {
+    background: linear-gradient(to right, #ff8c42, #ffb703);
+    color: rgb(0, 0, 0);
+}
+
+.form-actions input[type="reset"] {
+    background:rgb(163, 154, 154);
+    margin-left: 10px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .register-wrapper {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .register-left,
+    .register-right {
+        width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* mobile = 1 column */
+    }
+
+    .section-title,
+    .form-group.full {
+        grid-column: span 1;
+    }
+}
+</style>
+
+<div class="page-wrapper">
+    <div class="register-wrapper">
+
+        <div class="register-left">
+            <h2>Welcome!</h2>
+            <p>
+                Register now and experience a smarter way to manage
+                your grocery needs with ease and efficiency.
+            </p>
+        </div>
+
+        <div class="register-right">
+
+            <div class="form-title">User Registration</div>
+            <div class="form-subtitle">Please fill in the details below</div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <div class="section-title">Personal Information</div>
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="txt_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" name="txt_contact" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="txt_email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="txt_password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" name="txt_confirmpassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="gender-group">
+                            <label><input type="radio" name="gender" value="Male"> Male</label>
+                            <label><input type="radio" name="gender" value="Female"> Female</label>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Location Details</div>
+
+                    <div class="form-group">
+                        <label>District</label>
+                        <select name="sel_district" id="sel_district" required>
+                            <option value="">Select District</option>
+                            {% for i in districtdata %}
+                            <option value="{{i.id}}">{{i.district_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Place</label>
+                        <select name="sel_place" id="sel_place" required>
+                            <option value="">Select Place</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Address</label>
+                        <textarea name="txt_address" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Photo</label>
+                        <input type="file" name="txt_photo" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <input type="submit" value="Register">
+                    <input type="reset" value="Cancel">
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('#sel_district').change(function () {
+    var did = $(this).val();
+    var ur = "{% url 'Guest:Ajaxplace' %}";
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function (data) {
+            $('#sel_place').html(data);
+        }
+    });
+});
+</script>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Guest:Newuser' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

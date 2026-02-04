@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeliveryBoy View</title>
+</head>
+<body>
+    <center>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1>Delivery View</h1>
+        <table border="2">
+            <tr>
+                <td>SL.NO</td>
+                <td>Name</td>
+                <td>Gender</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Doj</td>
+                <td>Address</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Photo</td>
+                <td>Proof</td>
+                <td colspan="2">Action</td>
+            </tr>
+            {% for i in deliverydata %}
+            <tr>
+                <td>{{ forloop.counter}}</td>
+                <td>{{i.delivery_name}}</td>
+                <td>{{i.delivery_gender}}</td>
+                <td>{{i.delivery_email}}</td>
+                <td>{{i.delivery_contact}}</td>
+                <td>{{i.delivery_doj}}</td>
+                <td>{{i.delivery_address}}</td>
+                <td>{{i.delivery_place.district.district_name}}</td>
+                <td>{{i.delivery_place.place_name}}</td>
+                <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
+                <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
+                <td>
+                    {% if i.delivery_status == 0 %}
+                    <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
+                    <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
+                    {% elif i.delivery_status == 1 %}
+                    Verified
+                    {% elif i.delivery_status == 2 %}
+                    Rejected
+                    {% endif %}
+                
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br>
+        <h1> Verified Delivery List</h1>
+        <table border="2">
+            <tr>
+                <td>SL.NO</td>
+                <td>Name</td>
+                <td>Gender</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Doj</td>
+                <td>Address</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Photo</td>
+                <td>Proof</td>
+                <td colspan="2">Action</td>
+            </tr>
+            {% for i in accdeliverydata %}
+            <tr>
+                <td>{{ forloop.counter}}</td>
+                <td>{{i.delivery_name}}</td>
+                <td>{{i.delivery_gender}}</td>
+                <td>{{i.delivery_email}}</td>
+                <td>{{i.delivery_contact}}</td>
+                <td>{{i.delivery_doj}}</td>
+                <td>{{i.delivery_address}}</td>
+                <td>{{i.delivery_place.district.district_name}}</td>
+                <td>{{i.delivery_place.place_name}}</td>
+                <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
+                <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
+                <td>
+                    {% if i.delivery_status == 0 %}
+                    <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
+                    <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
+                {% elif i.delivery_status == 1 %}
+                Verified
+                    {% elif i.delivery_status == 2 %}
+                    Rejected
+                    {% endif %}
+                
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+      <br>
+
+      <h1> Rejected Delivery List</h1>
+      <table border="2">
+          <tr>
+              <td>SL.NO</td>
+              <td>Name</td>
+              <td>Gender</td>
+              <td>Email</td>
+              <td>Contact</td>
+              <td>Doj</td>
+              <td>Address</td>
+              <td>District</td>
+              <td>Place</td>
+              <td>Photo</td>
+              <td>Proof</td>
+              <td colspan="2">Action</td>
+          </tr>
+          {% for i in rejdeliverydata %}
+          <tr>
+              <td>{{ forloop.counter}}</td>
+              <td>{{i.delivery_name}}</td>
+              <td>{{i.delivery_gender}}</td>
+              <td>{{i.delivery_email}}</td>
+              <td>{{i.delivery_contact}}</td>
+              <td>{{i.delivery_doj}}</td>
+              <td>{{i.delivery_address}}</td>
+              <td>{{i.delivery_place.district.district_name}}</td>
+              <td>{{i.delivery_place.place_name}}</td>
+              <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
+              <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
+              <td>
+                  {% if i.delivery_status == 0 %}
+                  <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
+                  <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
+              {% elif i.delivery_status == 1 %}
+              Verified
+                  {% elif i.delivery_status == 2 %}
+                  Rejected
+                  {% endif %}
+              
+              </td>
+          </tr>
+          {% endfor %}
+      </table>
+    </form>
+    </center>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:Deliveryboyview' %}"
+</script>
+{% endif %}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+</head>
+<body>
+<center>
+    <h1>MyProfile</h1>
+<table border="2" cellpadding="5" cellspacing="1" width="300">
+    <tr>
+        <td colspan="2" align="center">
+            <img src="{{sellerdata.seller_ownerproof.url}}" alt="Profile Image" width="80" height="80">
+        </td>
+    </tr>
+
+    <tr>
+        <td><b>Name</b></td>
+        <td>{{sellerdata.seller_name}}</td>
+    </tr>
+
+    <tr>
+        <td><b>Email</b></td>
+        <td>{{sellerdata.seller_email}}</td>
+    </tr>
+
+    <tr>
+        <td><b>Contact</b></td>
+        <td>{{sellerdata.seller_contact}}</td>
+    </tr>
+
+    <tr>
+        <td><b>Established Date</b></td>
+        <td>{{sellerdata.seller_establishdate}}</td>
+    </tr>
+
+    <tr>
+        <td><b>District</b></td>
+        <td>{{sellerdata.seller_place.district.district_name}}</td>
+    </tr>
+
+    <tr>
+        <td><b>Place</b></td>
+        <td>{{sellerdata.seller_place.place_name}} </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="center">
+            <a href="{% url 'Seller:Editprofile' %}">Edit Profile</a>  |
+            <a href="{% url 'Seller:Changepassword' %}">ChangePassword</a>
+        </td>
+    </tr>
+
+</table>
+</center>
+
+</body>
+</html>

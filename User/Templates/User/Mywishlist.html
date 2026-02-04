@@ -1,0 +1,234 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <title>My Wishlist</title>
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            font-family:'Nunito', sans-serif;
+            background:white;
+        }
+
+        h1{
+            text-align:center;
+            padding: 30px 0;
+            font-weight:700;
+            color:rgb(218, 64, 89);
+        }
+
+        .wishlist-container{
+            max-width:1200px;
+            margin:auto;
+            padding: 0 20px 40px;
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap:25px;
+        }
+
+        .card{
+            background:#fff;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 10px 25px rgba(0,0,0,0.08);
+            transition:0.4s ease;
+            animation: cardFade 0.7s ease forwards;
+            opacity:0;
+        }
+
+        @keyframes cardFade{
+            to{opacity:1; transform: translateY(0);}
+        }
+
+        .card:hover{
+            transform: translateY(-8px);
+            box-shadow:0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .img-box{
+            height:150px; /* reduced from 220px */
+            overflow:hidden;
+            background:#fafafa;
+        }
+
+        .img-box img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            transition:0.4s ease;
+        }
+
+        .card:hover img{
+            transform: scale(1.08); /* slightly smaller hover zoom */
+        }
+
+        .card-body{
+            padding:18px;
+            text-align:center;
+        }
+
+        .card-body h3{
+            font-size:16px;
+            color:#333;
+            margin:8px 0;
+        }
+
+        /* .card-body p{
+            font-size:13px;
+            color:#666;
+            height:40px;
+            overflow:hidden;
+        } */
+        .card-body p{
+    font-size:13px;
+    color:#666;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* show max 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+        .price{
+            font-size:18px;
+            font-weight:700;
+            color:#2a9d8f;
+            margin:10px 0;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:10px;
+            padding:10px 22px;
+            border-radius:30px;
+            text-decoration:none;
+            color:#fff;
+            background: linear-gradient(135deg,#ff6a88,#ff99ac);
+            font-size:13px;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            transform: scale(1.05);
+            box-shadow:0 8px 18px rgba(255,106,136,0.4);
+        }
+
+        .out{
+            display:inline-block;
+            margin-top:12px;
+            padding:8px 20px;
+            border-radius:30px;
+            background:#852b35;
+            color:#d62828;
+            font-size:13px;
+            font-weight:600;
+        }
+
+/* ---------- REMOVE BUTTON ---------- */
+.remove-btn{
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    color:#fff;
+    border:none;
+    padding:10px 20px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    transition:0.3s ease;
+    box-shadow:0 6px 15px rgba(255,65,108,0.35);
+}
+
+.remove-btn:hover{
+    transform: scale(1.07);
+    box-shadow:0 10px 22px rgba(255,65,108,0.55);
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+.remove-btn:active{
+    transform: scale(0.95);
+}
+.action-buttons{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-top:20px;
+}
+
+
+    </style>
+</head>
+
+<body>
+
+<h1><i class="fa-solid fa-heart"></i> My Wishlist</h1>
+
+<div class="wishlist-container">
+
+    {% for i in viewwishlistdata %}
+    <div class="card">
+        <div class="img-box">
+            <img src="{{ i.product.product_photo.url }}">
+        </div>
+
+        <div class="card-body">
+            <h3>{{ i.product.product_name }}</h3>
+            <p>{{ i.product.product_details }}</p>
+
+            <div class="price">₹ {{ i.product.product_price }}</div>
+
+            {% if i.total_stock <= 0 %}
+                <span class="out">Out Of Stock</span>
+            {% else %}
+                <a href="{% url 'User:Addtocart1' i.product.id %}" class="btn">
+                    <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                </a>
+            {% endif %}
+            <a href="{% url 'User:Delwishlist' i.id %}">
+                <button type="button" class="remove-btn">Remove</button>
+            </a>
+            <!-- <div class="product-removal">
+               
+            </div> -->
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.12}s`;
+    });
+</script>
+
+</body>
+</html>
+
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'User:Viewwishlist' %}"
+</script>
+{% endif %}
+<br><br><br>
+{% endblock content %}

@@ -1,0 +1,71 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.recipe-card img{
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.recipe-card{
+    transition: 0.3s ease-in-out;
+}
+
+.recipe-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.badge{
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 20px;
+}
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 fw-bold">
+        🍽️ Recommended {{meal}} Recipes For You
+    </h2>
+
+    <div class="row">
+        {% for i in recipedata %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card recipe-card border-0 shadow h-100">
+                <img src="{{i.recipe_file.url}}" class="card-img-top" alt="{{i.recipe_name}}">
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{i.recipe_name}}</h5>
+                    <p class="card-text text-muted small">
+                       <i> Method of Making:</i>
+                    </p>
+
+                    <p class="card-text text-muted small">
+                        {{i.recipe_details}}
+                    </p>
+
+                    <div class="d-flex justify-content-between mt-auto">
+                        <span class="badge bg-primary">
+                            {{i.mealtype.mealtype_name}}
+                        </span>
+                        <span class="badge bg-success">
+                            {{i.foodcategory.foodcategory_name}}
+                        </span>
+                    </div>
+
+                    <a href="{% url 'User:Viewingrediants' i.id %}" target="_blank"
+                       class="btn btn-outline-danger btn-sm w-100 mt-3">
+                        📄 View Recipe
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h4 class="text-center text-danger">No Recipe Available</h4>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

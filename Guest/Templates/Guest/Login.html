@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Login</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body{
+            min-height: 100vh;
+            /* https://i.pinimg.com/originals/5c/e7/8a/5ce78ae681ed7ee4552277765e4ecfec.gif */
+            background: url("https://i.pinimg.com/1200x/1e/26/ba/1e26bad27216733ef20674a45fe3df3a.jpg") no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box{
+            width: 380px;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            color: #fff;
+        }
+
+        .login-box h1{
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+
+        .login-box label{
+            font-size: 14px;
+        }
+
+        .login-box input{
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255,255,255,0.85);
+            font-size: 14px;
+        }
+
+        .login-box input[type="submit"]{
+            background: #2ecc71;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-box input[type="submit"]:hover{
+            background: #27ae60;
+        }
+
+        .links{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .links a{
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .links a:hover{
+            text-decoration: underline;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h1>Login</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <label>Email</label>
+            <input type="email" name="txt_email" required>
+
+            <label>Password</label>
+            <input type="password" name="txt_password" required>
+
+            <input type="submit" value="Login">
+
+            <div class="links">
+                <a href="{% url 'Guest:Newuser' %}">New User</a>
+                <a href="{% url 'Guest:Newseller' %}">New Seller</a>
+            </div>
+        </form>
+    </div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Guest:Login' %}"
+</script>
+{% endif %}
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <center>
+    <h1>Login</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table border="2">
+            <tr>
+                <td>Email</td>
+                <td><input type="email" name="txt_email" id=""></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="txt_password" id=""></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Login"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'Guest:Newuser'  %}">Newuser</a></td>
+                <td><a href="{% url 'Guest:Newseller'  %}">Newseller</a></td>
+               
+
+          
+            </tr>
+        </table>
+    </form>
+    </center>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Guest:Login' %}"
+</script>
+{% endif %} -->

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1>Stock</h1>
+        <table border="2">
+            <tr>
+                <td>Stock</td>
+                <td><input type="number"name="txt_stock" id=""></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"> <input type="submit" value="Submit"></td>
+                <td></td>
+            </tr>
+        </table>
+        <br>
+        <br><br>
+        <h1>StockList</h1>
+        <table border="2">
+           <tr>
+               <td>S.NO</td>
+               <td>Stock Count</td>
+               <td>Action</td>
+           </tr>
+           {% for i in stockdata %}
+           <tr>
+               <td>{{ forloop.counter}}</td>
+               <td>{{i.stock_count}}</td>
+               <td><a href="{%  url 'Seller:delestock' i.id  pid %}">Delete</a></td>
+           </tr>
+           {% endfor %}
+         </table>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Seller:Stock' pid %}"
+</script>
+{% endif %}

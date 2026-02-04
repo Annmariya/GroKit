@@ -1,0 +1,269 @@
+{% extends 'Admin/Head.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Page Wrapper */
+.admin-wrapper {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Card */
+.admin-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+}
+
+/* Title */
+.admin-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4b2aad;
+    margin-bottom: 20px;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.admin-table th {
+    color: #4b2aad;
+    font-weight: 600;
+}
+
+.admin-table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Action Buttons */
+.action-btn {
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    margin: 2px;
+    transition: 0.3s;
+}
+
+.accept-btn {
+    background: #d4edda;
+    color: #155724;
+}
+
+.reject-btn {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #fff;
+    display: inline-block;
+}
+
+.status-verified {
+    background: #28a745;
+}
+
+.status-rejected {
+    background: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-table th, .admin-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+</style>
+
+<div class="admin-wrapper">
+
+    <!-- All Users -->
+    <div class="admin-card">
+        <div class="admin-title">User List</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Photo</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in userdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.user_name }}</td>
+                        <td>{{ i.user_gender }}</td>
+                        <td>{{ i.user_contact }}</td>
+                        <td>{{ i.user_email }}</td>
+                        <td>{{ i.user_place.place_name }}</td>
+                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
+                        <td>{{ i.user_address }}</td>
+                        <td>
+                            {% if i.user_status == 0 %}
+                                <a href="{% url 'Admin:acceptuser' i.id %}" class="action-btn accept-btn">Accept</a>
+                                <a href="{% url 'Admin:rejectuser' i.id %}" class="action-btn reject-btn">Reject</a>
+                            {% elif i.user_status == 1 %}
+                                <span class="status-badge status-verified">Verified</span>
+                            {% elif i.user_status == 2 %}
+                                <span class="status-badge status-rejected">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Verified Users -->
+    <div class="admin-card">
+        <div class="admin-title">Verified Users</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Photo</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in accuserdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.user_name }}</td>
+                        <td>{{ i.user_gender }}</td>
+                        <td>{{ i.user_contact }}</td>
+                        <td>{{ i.user_email }}</td>
+                        <td>{{ i.user_place.place_name }}</td>
+                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
+                        <td>{{ i.user_address }}</td>
+                        <td>
+                            <span class="status-badge status-verified">Verified</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No verified users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Rejected Users -->
+    <div class="admin-card">
+        <div class="admin-title">Rejected Users</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Photo</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in rejuserdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.user_name }}</td>
+                        <td>{{ i.user_gender }}</td>
+                        <td>{{ i.user_contact }}</td>
+                        <td>{{ i.user_email }}</td>
+                        <td>{{ i.user_place.place_name }}</td>
+                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
+                        <td>{{ i.user_address }}</td>
+                        <td>
+                            <span class="status-badge status-rejected">Rejected</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No rejected users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Admin:UserList' %}";
+</script>
+{% endif %}
+
+{% endblock %}
+
+
+<!-- 
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:UserList' %}"
+</script> -->

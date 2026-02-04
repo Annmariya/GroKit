@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <table border="2">
+            <tr>
+                <td>Product Name</td>
+                <td><input type="text" name="txt_productname" id=""></td>
+            </tr>
+            <tr>
+                <td>Product details</td>
+                <td><textarea name="txt_productdetails" id="" cols="30" rows="10" placeholder="Enter your Content....!">
+                </textarea></td>
+            </tr>
+
+            <tr>
+                <td>Price</td>
+                <td><input type= "text" name="txt_price" id=""></td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input type="file" name="txt_photo" id=""></td>
+            </tr>
+            
+
+            <tr>
+                <td>Category</td>
+                <td>
+                    <select name="sel_category" id="sel_category">
+                        <option value="">--Select Category-- </option>
+                        {% for i in categorydata %}
+                        <option  value="{{i.id}}">
+                            {{i.category_name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Subcategory</td>
+                <td>
+                    <select name="sel_subcategory" id="sel_subcategory">
+                        <option value="">--Select Subcategory-- </option>
+                        
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Brand</td>
+                <td>
+                    <select name="sel_brand">
+                        <option value="">--Select Brand-- </option>
+                        {% for i in branddata %}
+                        <option  value="{{i.id}}">
+                            {{i.brand_name}}
+                        </option>
+                        {% endfor %}              
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+                <td></td>
+            </tr>
+        </table>
+        <br>
+        <h1>Product List</h1>
+        <table border="2">
+            <tr>
+                <td>S.NO</td>
+                <td>Product Name</td>
+                <td>Product Details</td>
+                <td>Price</td>
+                <td>Category</td>
+                <td>Subcategory</td>
+                <td>Brand</td>
+                <td>Photo</td>
+                <td>Action</td>
+            </tr>
+            {% for i in  productdata %}
+            <tr>
+                <td>{{ forloop.counter}}</td>
+                <td>{{ i.product_name}}</td>
+                <td>{{ i.product_details}}</td>
+                <td>{{ i.product_price}}</td>
+                <td>{{ i.subcategory.category.category_name}}</td>
+                <td>{{ i.subcategory.subcategory_name}}</td>
+                <td>{{ i.brand.brand_name}}</td>
+                <td><img src="{{i.product_photo.url}}" width="80" height="80"></td>
+                <td><a href="{%  url 'Seller:delproduct' i.id %}">Delete</a></td>
+                <td><a href="{%  url 'Seller:Stock' i.id %}">Add Stock</a></td>
+                <td><a href="{%  url 'Seller:Gallery' i.id %}">Add Gallery</a></td>
+
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_category').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Seller:Ajaxproduct' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_subcategory').html(data);
+            }
+        });
+    });
+</script>
+
+
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Seller:Product' %}"
+</script>
+{% endif %}
