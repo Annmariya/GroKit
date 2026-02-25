@@ -11,6 +11,23 @@
     <h1><center>Seller - View Bookings</center></h1>
     <br><br>
 
+    <form method="get" style="margin-bottom:20px;">
+        <label><strong>From:</strong></label>
+        <input type="date" name="from_date" value="{{ from_date }}">
+    
+        <label style="margin-left:10px;"><strong>To:</strong></label>
+        <input type="date" name="to_date" value="{{ to_date }}">
+    
+        <input type="submit" value="Filter">
+    
+        <a href="{% url 'Seller:ViewBookings' %}">
+            <button type="button">Reset</button>
+        </a>
+    </form>
+
+
+
+
     <table border="1" cellpadding="10" width="100%">
         {% for b in bookings %}
 
@@ -20,6 +37,16 @@
                 <strong>Date:</strong> {{ b.booking_date }} <br>
                 <strong>Total Order Amount:</strong> ₹{{ b.booking_amount }} <br>
                 <strong>Customer:</strong> {{ b.user.user_name }}
+                <br><br>
+                
+                <!-- {% if b.deliveryboy_id %}
+                <strong>Delivery Boy:</strong> {{ b.deliveryboy.delivery_name }}
+            {% else %}
+            <a href=""
+            style="padding:6px 12px; background:#198754; color:white; text-decoration:none; border-radius:4px;">
+            🛵 Assign Delivery Boy
+         </a>
+            {% endif %} -->
             </td>
         </tr>
 
@@ -48,6 +75,7 @@
             <td>
                 ₹{{ c.cart_quantity|mul:c.product.product_price }}
             </td>
+            
             <td>
                 {% if c.cart_status == 2 %}
                 <a href="{% url 'Seller:UpdateCartStatus' c.id 3 %}">

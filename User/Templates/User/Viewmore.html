@@ -1,0 +1,366 @@
+{% extends 'User/Head.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+<style>
+
+/* ================= MAIN PRODUCT SECTION ================= */
+
+.pd-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 50px 0;
+    background: #f8fafc;
+}
+
+.pd-card {
+    width: 85%;
+    display: flex;
+    gap: 50px;
+    padding: 40px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #ffffff, #f9fafb);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+}
+
+.pd-left { flex: 1; }
+.pd-right { flex: 1; text-align: center; }
+
+.pd-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pd-info {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #374151;
+}
+
+.sp-info {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #374151;
+}
+
+.pd-label {
+    font-weight: 600;
+    color: #111827;
+}
+
+.pd-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.pd-stock-in {
+    background: #dcfce7;
+    color: #065f46;
+    padding: 6px 15px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.pd-stock-out {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 6px 15px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.pd-star-filled { color: #facc15; }
+.pd-star-empty { color: #d1d5db; }
+
+.pd-button-group { margin-top: 18px; }
+
+.pd-btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: 0.3s ease;
+    color: #ffffff;
+}
+
+.pd-btn-cart { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.pd-btn-rating { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+.pd-btn:hover { transform: translateY(-3px); }
+
+.pd-divider {
+    height: 1px;
+    margin: 25px 0;
+    background: linear-gradient(to right, transparent, #c7d2fe, transparent);
+}
+
+.pd-subtitle {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #4338ca;
+}
+
+.pd-description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+.pd-main-image {
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 2px solid #e0e7ff;
+    box-shadow: 0 15px 35px rgba(99,102,241,0.35);
+    transition: 0.4s ease;
+}
+
+.pd-main-image:hover { transform: scale(1.05); }
+
+.pd-gallery { margin-top: 20px; }
+
+.pd-thumb {
+    width: 85px;
+    height: 85px;
+    margin: 6px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid #e0e7ff;
+    transition: 0.3s;
+}
+
+.pd-thumb:hover {
+    transform: scale(1.15);
+    border-color: #6366f1;
+}
+
+/* ================= SIMILAR PRODUCTS SECTION ================= */
+
+.sp-wrapper {
+    width: 85%;
+    margin: 60px auto;
+}
+
+.sp-heading {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #1f2937;
+}
+
+.sp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+.sp-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.sp-card:hover { transform: translateY(-6px); }
+
+.sp-image {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.sp-name {
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #374151;
+}
+
+.sp-price {
+    margin: 8px 0;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.sp-actions { margin-top: 12px; }
+
+.sp-btn {
+    display: inline-block;
+    margin: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.sp-cart { background: #16a34a; }
+.sp-wish { background: #f59e0b; }
+.sp-view { background: #4f46e5; }
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+    .pd-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pd-main-image {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+</style>
+
+
+<!-- ================= MAIN PRODUCT ================= -->
+
+<div class="pd-wrapper">
+    <div class="pd-card">
+
+        <div class="pd-left">
+
+            <div class="pd-title">{{ product.product_name }}</div>
+
+            <div class="pd-info">
+                <span class="pd-label">Seller:</span> {{ seller.seller_name }}
+            </div>
+
+            <div class="pd-info">
+                <span class="pd-label">Category:</span>
+                {{ product.subcategory.category.category_name }}
+            </div>
+
+            <div class="pd-info">
+                <span class="pd-label">SubCategory:</span>
+                {{ product.subcategory.subcategory_name }}
+            </div>
+
+            <div class="pd-info">
+                <span class="pd-label">Price:</span>
+                <span class="pd-price">₹{{ product.product_price }}</span>
+            </div>
+
+            <div class="pd-info">
+                <span class="pd-label">Availability:</span>
+                {% if available <= 0 %}
+                    <span class="pd-stock-out">Out Of Stock</span>
+                {% else %}
+                    <span class="pd-stock-in">{{ available }} in stock</span>
+                {% endif %}
+            </div>
+
+            <div class="pd-info">
+                <span class="pd-label">Rating:</span>
+                {% for i in ar %}
+                    {% if i <= avg %}
+                        <i class="fa-solid fa-star pd-star-filled"></i>
+                    {% else %}
+                        <i class="fa-solid fa-star pd-star-empty"></i>
+                    {% endif %}
+                {% endfor %}
+                ({{ ratecount }} reviews)
+            </div>
+
+            <div class="pd-button-group">
+                <a class="pd-btn pd-btn-cart" href="{% url 'User:Addtocart1' product.id %}">
+                    Add To Cart
+                </a>
+                <a class="pd-btn pd-btn-rating" href="{% url 'User:Viewrating' product.id %}">
+                    View Rating
+                </a>
+            </div>
+
+            <div class="pd-divider"></div>
+
+            <div class="pd-subtitle">Description</div>
+            <div class="pd-description">{{ product.product_details }}</div>
+
+        </div>
+
+        <div class="pd-right">
+
+            <img id="mainPhoto" class="pd-main-image" src="{{ product.product_photo.url }}">
+
+            <div class="pd-gallery">
+                {% for g in gallery %}
+                    <img class="pd-thumb"
+                         src="{{ g.gallery_photo.url }}"
+                         onclick="document.getElementById('mainPhoto').src='{{ g.gallery_photo.url }}'">
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ================= SIMILAR PRODUCTS ================= -->
+
+<div class="sp-wrapper">
+
+    <div class="sp-heading">Similar Products</div>
+
+    <div class="sp-grid">
+        {% for i in simlarproduct %}
+        <div class="sp-card">
+
+            <img class="sp-image" src="{{ i.product_photo.url }}">
+
+            <div class="sp-name">{{ i.product_name }}</div>
+
+            <div class="sp-price">₹ {{ i.product_price }}</div>
+
+            <div class="sp-info">
+                <span class="pd-label">Availability:</span>
+                {% if i.available <= 0 %}
+                    <span class="pd-stock-out">Out Of Stock</span>
+                {% else %}
+                    <span class="pd-stock-in">{{ i.available }} in stock</span>
+                {% endif %}
+            </div>
+
+            <div class="sp-info">
+                <span class="pd-label">Rating:</span>
+                {% for star in ar %}
+                    {% if star <= i.avg %}
+                        <i class="fa-solid fa-star pd-star-filled"></i>
+                    {% else %}
+                        <i class="fa-solid fa-star pd-star-empty"></i>
+                    {% endif %}
+                {% endfor %}
+                ({{ i.ratecount }} reviews)
+            </div>
+
+            <div class="sp-actions">
+                <a class="sp-btn sp-cart" href="{% url 'User:Addtocart' i.id %}">Cart</a>
+                <a class="sp-btn sp-wish" href="{% url 'User:Addwishlist' i.id %}">Wishlist</a>
+                <a class="sp-btn sp-view" href="{% url 'User:ViewMore' i.id %}">View</a>
+            </div>
+
+        </div>
+        {% empty %}
+        <div>No similar products found</div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock content %}

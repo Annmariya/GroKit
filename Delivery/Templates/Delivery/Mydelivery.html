@@ -1,94 +1,655 @@
+{% extends 'Delivery/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br><br><br>
 {% load mathfilters %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>My Delivery</title>
+    <title>Take Your Delivery Order</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .delivery-dashboard {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .dashboard-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .header-icon {
+            font-size: 2.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-badge {
+            background: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+            color: #0f172a;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-badge span {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        /* Order Grid */
+        .orders-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Order Card */
+        .order-card-modern {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .order-card-modern:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 35px 60px -15px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Order Header */
+        .order-header-modern {
+            background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%);
+            padding: 1.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-header-modern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content-modern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-id-modern {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .id-pill {
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        .order-meta-modern {
+            display: flex;
+            gap: 1.5rem;
+            color: white;
+        }
+
+        .meta-item-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            backdrop-filter: blur(5px);
+            font-weight: 500;
+        }
+
+        .meta-icon {
+            font-size: 1.2rem;
+        }
+
+        .customer-chip {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Table Section */
+        .table-wrapper-modern {
+            padding: 2rem;
+            background: #ffffff;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 1rem;
+        }
+
+        .products-table th {
+            text-align: left;
+            padding: 1rem 1rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .products-table td {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .products-table tr:hover td {
+            background: #f1f5f9;
+            transform: scale(1.01);
+        }
+
+        /* Product Cell */
+        .product-cell-modern {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .product-img-wrapper {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 3px solid white;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-img-wrapper:hover img {
+            transform: scale(1.2);
+        }
+
+        .product-info-modern {
+            flex: 1;
+        }
+
+        .product-name-modern {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-desc-modern {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price-modern {
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Quantity Badge */
+        .quantity-modern {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+            text-align: center;
+            min-width: 70px;
+        }
+
+        /* Amount Display */
+        .amount-modern {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Action Buttons */
+        .action-group-modern {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-modern {
+            padding: 0.8rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-collect {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+        }
+
+        .btn-collect:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-out {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-out:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-deliver {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-deliver:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-success-modern {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-waiting-modern {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state-modern {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .empty-icon-modern {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .empty-title-modern {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-subtitle-modern {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-content-modern {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .order-meta-modern {
+                flex-wrap: wrap;
+            }
+
+            .product-cell-modern {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .products-table td {
+                min-width: 200px;
+            }
+        }
+
+        /* Animation */
+        .order-card-modern {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Progress indicator */
+        .delivery-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
 </head>
 
 <body>
-    <h1><center>My Delivery</center></h1>
-    <br><br>
+    <div class="delivery-dashboard">
+        <!-- Header Section -->
+        <div class="dashboard-header">
 
-    <table border="1" cellpadding="10" width="100%">
-        {% for b in bookings %}
 
-        <tr style="background:#e8f0ff">
-            <td colspan="6">
-                <strong>Order #:</strong> {{ b.id }} <br>
-                <strong>Date:</strong> {{ b.booking_date }} <br>
-                <strong>Total Order Amount:</strong> ₹{{ b.booking_amount }} <br>
-                <strong>Customer:</strong> {{ b.user.user_name }}
-            </td>
-        </tr>
-
-        <tr>
-            <th>SNO</th>
-            <th>Photo</th>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Amount</th>
-            <th>Action</th>
-        </tr>
-
-        {% for c in b.tbl_cart_set.all %}
-        {% if c.product.seller_id == request.session.sid %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>
-                <img src="{{ c.product.product_photo.url }}" width="100">
-            </td>
-            <td>
-                <strong>{{ c.product.product_name }}</strong><br>
-                {{ c.product.product_description }}<br>
-                ₹{{ c.product.product_price }}
-            </td>
-            <td>{{ c.cart_quantity }}</td>
-            <td>
-                ₹{{ c.cart_quantity|mul:c.product.product_price }}
-            </td>
-            <td>
-                {% if c.cart_status == 4 %}
-                <a href="{% url 'Delivery:UpdateCartStatus' c.id 5 %}">
-                    ✅ Item Collected
+            <form method="get" style="margin-top:20px; margin-bottom:30px; display:flex; gap:15px; flex-wrap:wrap;">
+                <input type="date" name="from_date" value="{{ from_date }}" 
+                       style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+            
+                <input type="date" name="to_date" value="{{ to_date }}" 
+                       style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+            
+                <button type="submit" 
+                        style="padding:10px 20px; border:none; border-radius:8px; background:#3b82f6; color:white; cursor:pointer;">
+                    Filter
+                </button>
+            
+                <a href="{% url 'Delivery:Mydelivery' %}">
+                    <button type="button" 
+                            style="padding:10px 20px; border:none; border-radius:8px; background:#64748b; color:white; cursor:pointer;">
+                        Reset
+                    </button>
                 </a>
+            </form>
+            
+            <div class="header-title">
+                <span class="header-icon">📦</span>
+                <h1>Delivery Fleet Management</h1>
+            </div>
+            <div class="header-stats">
+                <div class="stat-badge">
+                    <span>📋</span> Active Orders: {{ bookings|length }}
+                </div>
+                <div class="stat-badge">
+                    <span>🚚</span> On Delivery: 
+                    {% with count=0 %}
+                        {% for b in bookings %}
+                            {% for c in b.tbl_cart_set.all %}
+                                {% if c.cart_status == 6 %}
+                                    {% with count=count|add:1 %}{% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        {{ count }}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
 
-                {% elif c.cart_status == 5 %}
-                <a href="{% url 'Delivery:UpdateCartStatus' c.id 6 %}">
-                    📍 Mark as Out for Delivery
-                </a>
+        <!-- Orders Grid -->
+        <div class="orders-grid">
+            {% for b in bookings %}
+            <div class="order-card-modern">
+                <!-- Order Header -->
+                <div class="order-header-modern">
+                    <div class="header-content-modern">
+                        <div class="order-id-modern">
+                            <span class="id-pill">#{{ b.id }}</span>
+                            <div class="delivery-progress">
+                                <span class="progress-dot"></span>
+                                <span>In Progress</span>
+                            </div>
+                        </div>
+                        <div class="order-meta-modern">
+                            <div class="meta-item-modern">
+                                <span class="meta-icon">📅</span>
+                                <span>{{ b.booking_date }}</span>
+                            </div>
+                            <div class="meta-item-modern">
+                                <span class="meta-icon">💰</span>
+                                <span>₹{{ b.booking_amount }}</span>
+                            </div>
+                            <div class="meta-item-modern customer-chip">
+                                <span class="meta-icon">👤</span>
+                                <span>{{ b.user.user_name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                {% elif c.cart_status == 6 %}
-                <a href="{% url 'Delivery:UpdateCartStatus' c.id 7 %}">
-                    Mark as Delivered
-                </a>
+                <!-- Table Section -->
+                <div class="table-wrapper-modern">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in b.tbl_cart_set.all %}
+                            {% if c.product.seller_id == request.session.sid %}
+                            <tr>
+                                <td>
+                                    <div class="product-cell-modern">
+                                        <div class="product-img-wrapper">
+                                            <img src="{{ c.product.product_photo.url }}" alt="{{ c.product.product_name }}">
+                                        </div>
+                                        <div class="product-info-modern">
+                                            <div class="product-name-modern">{{ c.product.product_name }}</div>
+                                            <div class="product-desc-modern">{{ c.product.product_description|truncatechars:50 }}</div>
+                                            <div class="product-price-modern">₹{{ c.product.product_price }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="quantity-modern">{{ c.cart_quantity }}</span>
+                                </td>
+                                <td>
+                                    <span class="amount-modern">₹{{ c.cart_quantity|mul:c.product.product_price }}</span>
+                                </td>
+                                <td>
+                                    <div class="action-group-modern">
+                                        {% if c.cart_status == 4 %}
+                                        <a href="{% url 'Delivery:UpdateCartStatus' c.id 5 %}" class="btn-modern btn-collect">
+                                            <span>✅</span> Collect Item
+                                        </a>
 
-                {% elif c.cart_status == 7 %}
-                <span style="color:green; font-weight:bold;">
-                    🎉 Delivered Successfully
-                </span>
+                                        {% elif c.cart_status == 5 %}
+                                        <a href="{% url 'Delivery:UpdateCartStatus' c.id 6 %}" class="btn-modern btn-out">
+                                            <span>📍</span> Out for Delivery
+                                        </a>
 
-                {% else %}
-                <span style="color:gray;">
-                    ⏳ Waiting for Payment
-                </span>
-                {% endif %}
-            </td>
+                                        {% elif c.cart_status == 6 %}
+                                        <a href="{% url 'Delivery:UpdateCartStatus' c.id 7 %}" class="btn-modern btn-deliver">
+                                            <span>📦</span> Mark Delivered
+                                        </a>
 
+                                        {% elif c.cart_status == 7 %}
+                                        <span class="status-success-modern">
+                                            <span>🎉</span> Delivered
+                                        </span>
 
-        </tr>
-        {% endif %}
-        {% endfor %}
+                                        {% else %}
+                                        <span class="status-waiting-modern">
+                                            <span>⏳</span> Payment Pending
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        {% empty %}
-        <tr>
-            <td colspan="6">No Delivery found</td>
-        </tr>
+            {% empty %}
+            <!-- Empty State -->
+            <div class="empty-state-modern">
+                <div class="empty-icon-modern">📭</div>
+                <h2 class="empty-title-modern">No Delivery Orders</h2>
+                <p class="empty-subtitle-modern">Your delivery queue is empty. New orders will appear here automatically.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-        {% endfor %}
-    </table>
-
+    <script>
+        // Add smooth scroll animations
+        document.querySelectorAll('.btn-modern').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 300);
+            });
+        });
+    </script>
 </body>
 
 </html>
+
+{% endblock content %}

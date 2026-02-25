@@ -16,6 +16,10 @@ urlpatterns = [
        path('ViewBookings/',views.ViewBookings,name="ViewBookings"),
        path('UpdateCartStatus/<int:cid>/<int:status>/',views.UpdateCartStatus,name='UpdateCartStatus'),
        path('Logout/',views.Logout,name="Logout"),
+       # path('AssignDelivery/<int:bid>',views.AssignDelivery,name="AssignDelivery"),
+       # path('confirm-assign/<int:bid>/<int:did>/', views.ConfirmAssign, name='ConfirmAssign'),
+
+
 
 
 

@@ -234,6 +234,13 @@ def SellerList(request):
     rejsellerdata=tbl_seller.objects.filter(seller_status=2)
     return render(request,"Admin/SellerList.html",{'sellerdata':sellerdata,'accsellerdata':accsellerdata,'rejsellerdata':rejsellerdata})
 
+def DeliveryList(request):
+    deliverydata=tbl_deliveryboy.objects.all()
+    accdeliverydata=tbl_deliveryboy.objects.filter(delivery_status=1)
+    rejdeliverydata=tbl_deliveryboy.objects.filter(delivery_status=2)
+    return render(request,"Admin/Deliverylist.html",{'deliverydata':deliverydata,'accdeliverydata':accdeliverydata,'rejdeliverydata':rejdeliverydata})
+
+
 
 def acceptseller(request,aid):
         data=tbl_seller.objects.get(id=aid)
@@ -263,7 +270,8 @@ def Homepage(request):
           admindata=tbl_adminreg.objects.get(id=request.session['mid'])
           return render(request,"Admin/Homepage.html",{'admindata':admindata})
         # print(request.session['mid'])
-         
+        
+
 def Viewcomplaint(request):
     Viewdata=tbl_Complaint.objects.filter(complaint_status=0)
     replied=tbl_Complaint.objects.filter(complaint_status=1)
@@ -310,6 +318,9 @@ def rejectdelivery(request,drid):
         data.delivery_status=2
         data.save()
         return render(request,'Admin/Deliveryboyview.html',{'msg':'Rejected'})
+
+
+
 def Subcategory(request):
         categorydata=tbl_category.objects.all()
         subcategorydata=tbl_subcategory.objects.all()  
@@ -351,16 +362,48 @@ def Recipe(request):
         if request.method=="POST":
                 mealtype=tbl_mealtype.objects.get(id=request.POST.get("sel_mealtype"))
                 foodcategory=tbl_foodcategory.objects.get(id=request.POST.get("sel_foodcategory"))
-
                 name=request.POST.get("txt_name")
                 details=request.POST.get("txt_details")
                 file=request.FILES.get("txt_file")
+                video=request.FILES.get("txt_video") 
+                dietinfo=request.POST.get("txt_dietinfo") 
 
-                tbl_recipe.objects.create(recipe_name=name,recipe_details=details,recipe_file=file,mealtype=mealtype,foodcategory=foodcategory)
+                tbl_recipe.objects.create(recipe_name=name,recipe_details=details,recipe_file=file,recipe_video=video,diet_info=dietinfo,mealtype=mealtype,foodcategory=foodcategory)
                 return render(request,"Admin/Recipe.html",{'msg':"Data inserted"})
         
         else:
                 return render(request,"Admin/Recipe.html",{'mealdata':mealdata,'recipedata':recipedata,'foodcategorydata':foodcategorydata})
+
+
+
+def Editrecipe(request,reid):
+    foodcategorydata=tbl_foodcategory.objects.all()
+    mealdata=tbl_mealtype.objects.all()
+    recipedata=tbl_recipe.objects.get(id=reid)
+    if request.method=="POST":
+         meal=tbl_mealtype.objects.get(id=request.POST.get("sel_mealtype"))
+         foodcategory=tbl_foodcategory.objects.get(id=request.POST.get("sel_foodcategory"))
+         recipename=request.POST.get('txt_name')
+         recipedetails=request.POST.get('txt_details')
+         dietinfo=request.POST.get('txt_dietinfo')
+         file=request.FILES.get('txt_file')
+         video=request.FILES.get('txt_video')
+         recipedata.recipe_name=recipename
+         recipedata.recipe_details=recipedetails
+         recipedata.diet_info=dietinfo
+         recipedata.mealtype=meal
+         recipedata.foodcategory=foodcategory
+         if file:  # update only if new image selected
+            recipedata.recipe_file=file
+         if video:  # update only if new video selected
+            recipedata.recipe_video=video
+         recipedata.save()
+         return render(request,"Admin/Editrecipe.html",{'msg':'Data Updated'})
+    else:
+        return render(request,"Admin/Editrecipe.html",{'recipedata':recipedata,'foodcategorydata':foodcategorydata,'mealdata':mealdata})
+
+
+
 
 def delrecipe(request,reid):
         tbl_recipe.objects.get(id=reid).delete()

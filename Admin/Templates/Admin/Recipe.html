@@ -33,6 +33,23 @@
     margin-bottom: 20px;
 }
 
+/* Video Styling Only */
+.admin-table video {
+    width: 160px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #000;
+}
+
+.admin-table video:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+}
+
+
 /* Form */
 .form-group {
     display: flex;
@@ -132,6 +149,11 @@
     color: #a10000;
 }
 
+.edit-btn {
+    background: #ddffe5;
+    color: #18a100;
+}
+
 .add-btn {
     background: #e6ddff;
     color: #4b2aad;
@@ -169,8 +191,13 @@
                 <input type="text" name="txt_name" placeholder="Enter recipe name" required>
 
                 <textarea name="txt_details" placeholder="Enter recipe details..." required></textarea>
+                <!-- <label>Diet Info</label> -->
+                <textarea name="txt_dietinfo" placeholder="Enter diet details..." required></textarea>
 
                 <input type="file" name="txt_file" accept="image/*" required>
+                <input type="file" name="txt_video" accept="video/*" required>
+
+                
 
                 <input type="submit" value="Submit">
             </div>
@@ -191,6 +218,9 @@
                         <th>Name</th>
                         <th>Details</th>
                         <th>Image</th>
+                        <th>Video</th>
+                        <th>Video</th>
+                        <th>DietInfo</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -205,6 +235,18 @@
                         <td>
                             <img src="{{ i.recipe_file.url }}" alt="Recipe Image">
                         </td>
+                       
+                        <td>
+                            {% if i.recipe_video %}
+                                <video width="150" controls>
+                                    <source src="{{ i.recipe_video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                No Video
+                            {% endif %}
+                        </td>
+                        <td>{{ i.diet_info|truncatechars:60 }}</td>
                         <td>
                             <div class="action-group">
                                 <a href="{% url 'Admin:Ingredients' i.id %}" class="action-btn add-btn">
@@ -212,6 +254,9 @@
                                 </a>
                                 <a href="{% url 'Admin:delrecipe' i.id %}" class="action-btn delete-btn">
                                     Delete
+                                </a>
+                                <a href="{% url 'Admin:Editrecipe' i.id %}" class="action-btn edit-btn">
+                                 Edit
                                 </a>
                             </div>
                         </td>

@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import FileExtensionValidator
+
 
 class tbl_district(models.Model):
     district_name=models.CharField(max_length=50)
@@ -51,8 +53,11 @@ class tbl_recipe(models.Model):
     recipe_name=models.CharField(max_length=50)
     recipe_details=models.CharField(max_length=70)
     recipe_file=models.FileField(upload_to ='Assets/RecipeDocs')
+    recipe_video = models.FileField(upload_to='Assets/RecipeVideos/',
+    validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov', 'avi'])], null=True,blank=True)
     mealtype=models.ForeignKey(tbl_mealtype,on_delete=models.CASCADE)
     foodcategory=models.ForeignKey(tbl_foodcategory,on_delete=models.CASCADE)
+    diet_info = models.CharField(max_length=70, blank=True)
 
 class tbl_ingredients(models.Model):
     ingredients_name=models.CharField(max_length=50)
@@ -60,9 +65,8 @@ class tbl_ingredients(models.Model):
     ingredients_remark=models.CharField(max_length=50)
     recipe=models.ForeignKey(tbl_recipe,on_delete=models.CASCADE)
 
-
 class tbl_plan(models.Model):
-    plan_name=models.CharField(max_length=50)
-    plan_duration=models.CharField(max_length=50)
-    plan_details=models.CharField(max_length=70)
-    plan_amount=models.IntegerField(max_length=40)
+    plan_name = models.CharField(max_length=50)
+    plan_duration = models.IntegerField()  # store duration in days
+    plan_details = models.CharField(max_length=200)
+    plan_amount = models.IntegerField()  # no max_length

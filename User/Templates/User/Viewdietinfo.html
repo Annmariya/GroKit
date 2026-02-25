@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Modern font: 'Inter' for clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <title>View · Diet & Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f2f5f7;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+        }
+
+        /* main container */
+        form {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 45px -20px rgba(0,30,40,0.2);
+            border: 1px solid rgba(220, 235, 240, 0.6);
+        }
+
+        /* header */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #1a3b4a;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2eef2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 i {
+            font-style: italic;
+            background: linear-gradient(145deg, #2d7a8c, #1f9faa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-icon {
+            font-size: 2rem;
+            color: #43b3c0;
+            opacity: 0.8;
+        }
+
+        /* card grid layout */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+        }
+
+        /* individual card */
+        .diet-card {
+            background: #ffffff;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            box-shadow: 0 8px 22px -8px rgba(30, 70, 80, 0.12), 0 0 0 1px rgba(170, 210, 220, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .diet-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 32px -12px #2b7a8a40, 0 0 0 1px #96cfda;
+        }
+
+        /* card media area (video or placeholder) */
+        .card-media {
+            background: #daeef3;
+            background: linear-gradient(130deg, #e1f0f5, #d0e9f0);
+            padding: 1.2rem 1rem 0.8rem 1rem;  /* reduced padding */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #d0e2e8;
+        }
+
+        .video-wrapper {
+            width: 80%;  /* reduced from 100% to 80% */
+            max-width: 240px;  /* added max-width constraint */
+            margin: 0 auto;  /* center the wrapper */
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 6px 14px -5px #1c5c6e;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #b5d3dd;
+        }
+
+        .no-video-placeholder {
+            background: rgba(220, 240, 245, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 1.2rem 1rem;  /* reduced padding */
+            border-radius: 1.2rem;
+            text-align: center;
+            color: #31738a;
+            font-weight: 450;
+            width: 70%;  /* reduced width */
+            max-width: 200px;  /* max-width constraint */
+            margin: 0 auto;  /* center */
+            border: 2px dashed #9cc9d8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;  /* slightly smaller font */
+        }
+
+        .no-video-placeholder i {
+            font-size: 2rem;  /* reduced icon size */
+            color: #5ea7b9;
+            opacity: 0.8;
+        }
+
+        /* card content */
+        .card-content {
+            padding: 1.2rem 1.2rem 1.5rem 1.2rem;  /* reduced padding */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-number {
+            background: #d7eef5;
+            width: 36px;  /* slightly smaller */
+            height: 36px;  /* slightly smaller */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #1f748b;
+            font-size: 1rem;  /* reduced font size */
+            box-shadow: inset 0 1px 3px #b3dae8, 0 2px 4px #b3dae8;
+        }
+
+        .diet-title {
+            font-size: 0.9rem;  /* reduced font size */
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #6f9fb0;
+        }
+
+        .diet-info-text {
+            color: #1d404f;
+            line-height: 1.5;
+            font-size: 0.95rem;  /* slightly smaller */
+            margin: 0.3rem 0 1rem 0;  /* reduced margin */
+            padding: 0.7rem;  /* reduced padding */
+            background: #f7fbfc;
+            border-radius: 1rem;
+            border: 1px solid #ddecf2;
+            word-break: break-word;
+            flex: 1;
+        }
+
+        /* card meta footer (like placeholder for future action) */
+        .card-meta {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px dashed #cde3ea;
+            padding-top: 0.8rem;  /* reduced padding */
+            color: #569fb2;
+            font-size: 0.8rem;  /* smaller font */
+        }
+
+        .card-meta i {
+            margin-right: 4px;
+            color: #6fb4c5;
+        }
+
+        /* empty state */
+        .empty-state {
+            grid-column: 1 / -1;
+            background: #f0f9fc;
+            border-radius: 3rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: #31738a;
+            border: 2px dashed #aad0dd;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: #77b9ce;
+            margin-bottom: 1.5rem;
+        }
+
+        /* subtle footer */
+        .footer-note {
+            margin-top: 2.8rem;
+            text-align: right;
+            font-size: 0.85rem;
+            color: #92b9c8;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            body { padding: 1rem; }
+            form { padding: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+            
+            .video-wrapper {
+                width: 90%;  /* larger on mobile for better visibility */
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h1>
+            <span class="header-icon"><i class="fa-regular fa-rectangle-ad"></i></span>
+            <i>View Diet & Video Info</i>
+        </h1>
+
+        <!-- card grid replaces the table -->
+        <div class="card-grid">
+            {% for i in viewdata %}
+            <div class="diet-card">
+                <!-- media section: video or placeholder -->
+                <div class="card-media">
+                    {% if i.recipe_video %}
+                        <div class="video-wrapper">
+                            <video controls preload="metadata">
+                                <source src="{{ i.recipe_video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    {% else %}
+                        <div class="no-video-placeholder">
+                            <i class="fa-regular fa-film"></i>
+                            <span>No video</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- content area -->
+                <div class="card-content">
+                    <div class="card-header">
+                        <span class="card-number">{{ forloop.counter }}</span>
+                        <span class="diet-title"><i class="fa-regular fa-note" style="margin-right: 4px;"></i>Diet info</span>
+                    </div>
+
+                    <!-- diet text -->
+                    <div class="diet-info-text">
+                        <h3><td>{{ i.recipe_name}}</td></h3>
+                        {{ i.diet_info }}
+                    </div>
+
+                    <!-- meta line (like placeholder for future "view ingredients" or something) -->
+                    <div class="card-meta">
+                        <i class="fa-regular fa-clock"></i> entry #{{ forloop.counter }}
+                        <!-- you could add a link here later -->
+                        <!-- <a href="" style="margin-left: auto; color: #31738a;">View ingredients <i class="fa-regular fa-arrow-right"></i></a> -->
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fa-regular fa-folder-open"></i>
+                <h3 style="font-weight: 400; margin-top: 0.5rem;">No diet or video entries yet</h3>
+                <p style="color: #609aad;">Check back later or add new content</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="footer-note">
+            <i class="fa-regular fa-sparkles"></i>  {{ viewdata|length }} item(s)  <i class="fa-regular fa-utensils"></i>
+        </div>
+    </form>
+
+    <!-- {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'User:Viewproduct' %}"
+    </script>
+    {% endif %} -->
+</body>
+</html>

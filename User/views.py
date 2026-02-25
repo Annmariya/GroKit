@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect
+from django.http import JsonResponse
+from django.shortcuts import render,redirect,get_object_or_404
 from User.models import*
 from Guest.models import*
 from Admin.models import*
@@ -9,6 +10,10 @@ from django.utils import timezone
 from datetime import date
 from django.conf import settings
 from django.core.mail import send_mail
+
+from django.utils import timezone
+from datetime import timedelta
+from .models import tbl_subscription, tbl_plan
 # new point
 
 # Create your views here.
@@ -93,9 +98,7 @@ def Homepage(request):
 
             i.total_stock = total_stock - total_cart
 
-            tot = 0
-
-            
+            tot = 0  
         return render(request,"User/Homepage.html",{'userdata':userdata,'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata})
      
      
@@ -152,9 +155,75 @@ def Viewproduct(request):
 
         i.total_stock = total_stock - total_cart
         tot = 0
-
        
     return render(request,"User/Viewproduct.html",{'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata})
+
+
+def ViewMore(request, pid):
+
+    product = tbl_product.objects.get(id=pid)
+
+    gallery = tbl_gallery.objects.filter(product=product)
+
+    total_stock = tbl_stock.objects.filter(
+        product=product
+    ).aggregate(total=Sum('stock_count'))['total'] or 0
+
+    total_cart = tbl_cart.objects.filter(
+        product=product,
+        cart_status=1
+    ).aggregate(total=Sum('cart_quantity'))['total'] or 0
+
+    available = total_stock - total_cart
+
+    ratecount = tbl_rating.objects.filter(product=product).count()
+    avg = 0
+
+    if ratecount > 0:
+        total_rating = tbl_rating.objects.filter(product=product)\
+            .aggregate(total=Sum('rating_value'))['total'] or 0
+        avg = total_rating // ratecount
+
+    seller = product.seller
+    ar = [1, 2, 3, 4, 5]
+
+    simlarproduct = tbl_product.objects.filter(
+        subcategory__category=product.subcategory.category
+    ).exclude(id=product.id)[:4]
+
+    for sp in simlarproduct:
+
+        sp_stock = tbl_stock.objects.filter(
+            product=sp
+        ).aggregate(total=Sum('stock_count'))['total'] or 0
+
+        sp_cart = tbl_cart.objects.filter(
+            product=sp,
+            cart_status=1
+        ).aggregate(total=Sum('cart_quantity'))['total'] or 0
+
+        sp.available = sp_stock - sp_cart
+
+        sp_ratecount = tbl_rating.objects.filter(product=sp).count()
+        sp.ratecount = sp_ratecount
+
+        if sp_ratecount > 0:
+            sp_total_rating = tbl_rating.objects.filter(product=sp)\
+                .aggregate(total=Sum('rating_value'))['total'] or 0
+            sp.avg = sp_total_rating // sp_ratecount
+        else:
+            sp.avg = 0
+
+    return render(request, 'User/ViewMore.html', {
+        'product': product,
+        'gallery': gallery,
+        'available': available,
+        'avg': avg,
+        'ratecount': ratecount,
+        'seller': seller,
+        'ar': ar,
+        'simlarproduct': simlarproduct
+    })
 
 
 
@@ -226,8 +295,32 @@ def CartQty(request):
    return redirect("User:MyCart")
 
 def MyBooking(request):
-    bookingdata = tbl_booking.objects.filter(user=request.session['uid'],booking_status__gte=0)
-    return render(request,"User/MyBooking.html",{'bookingdata':bookingdata})
+    bookingdata = tbl_booking.objects.filter(
+        user_id=request.session['uid']
+    ).order_by('-booking_date')
+
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+
+    # Apply filters only if value exists
+    if from_date:
+        bookingdata = bookingdata.filter(
+            booking_date__gte=from_date
+        )
+
+    if to_date:
+        bookingdata = bookingdata.filter(
+            booking_date__lte=to_date
+        )
+
+    context = {
+        'bookingdata': bookingdata,
+        'from_date': from_date,
+        'to_date': to_date
+    }
+
+    return render(request, "User/MyBooking.html", context)
+
 
 
 def Payment(request):
@@ -301,7 +394,6 @@ def Delwishlist(request,wid):
 
 
 def time_based_recipe(request):
-
     current_time = datetime.now().time()
 
     mealdata = tbl_mealtype.objects.filter(
@@ -340,3 +432,131 @@ def Addtocart1(request,pid):
         cartdata=tbl_cart.objects.create(product=productdata,booking=bookingdata)
         return render(request,"User/Homepage.hml",{'bookingdata':bookingdata,'cartdata':cartdata,'msg':"Data Added in cart"})
 
+def rating(request,mid):
+    parray=[1,2,3,4,5]
+    mid=mid
+    # wdata=tbl_booking.objects.get(id=mid)
+    
+    counts=0
+    counts=stardata=tbl_rating.objects.filter(product=mid).count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.filter(product=mid).order_by('-rating_datetime')
+        for i in stardata:
+            res=res+i.rating_value
+        avg=res//counts
+        # print(avg)
+        return render(request,"User/Rating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"User/Rating.html",{'mid':mid})
+    
+def ajaxstar(request):
+    parray=[1,2,3,4,5]
+    rating_value=request.GET.get('rating_data')
+    
+    user_review=request.GET.get('user_review')
+    pid=request.GET.get('pid')
+    # wdata=tbl_booking.objects.get(id=pid)
+    tbl_rating.objects.create(user=tbl_user.objects.get(id=request.session['uid']),rating_content=user_review,rating_value=rating_value,product=tbl_product.objects.get(id=pid))
+    stardata=tbl_rating.objects.filter(product=pid).order_by('-rating_datetime')
+    return render(request,"User/AjaxRating.html",{'data':stardata,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    # cdata = tbl_booking.objects.get(id=request.GET.get("pdt"))
+    rate = tbl_rating.objects.filter(product=request.GET.get("pdt"))
+    ratecount = tbl_rating.objects.filter(product=request.GET.get("pdt")).count()
+    for i in rate:
+        if int(i.rating_value) == 5:
+            five = five + 1
+        elif int(i.rating_value) == 4:
+            four = four + 1
+        elif int(i.rating_value) == 3:
+            three = three + 1
+        elif int(i.rating_value) == 2:
+            two = two + 1
+        elif int(i.rating_value) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        # print(i.rating_value)
+        # r_len = r_len + int(i.rating_value)
+    # rlen = r_len // 5
+    # print(rlen)
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
+    return JsonResponse(result)
+
+def ViewSubscription(request,):
+    all_plans = tbl_plan.objects.all()
+    return render(request, "User/ViewSubscription.html", {
+        'all_plans': all_plans,   # for dropdown
+    })
+
+def Subscription(request, planid):
+    if 'uid' not in request.session:
+        return redirect('login')
+
+    plan = get_object_or_404(tbl_plan, id=planid)
+    user = get_object_or_404(tbl_user, id=request.session['uid'])
+
+    # Deactivate old subscriptions
+    tbl_subscription.objects.filter(user=user, is_active=True).update(is_active=False)
+
+    expiry = timezone.now() + timedelta(days=int(plan.plan_duration))
+
+    tbl_subscription.objects.create(
+        user=user,
+        plan=plan,
+        expiry_date=expiry,
+        is_active=True
+    )
+
+    return render(request, 'User/ViewSubscription.html', {'msg': "Subscribed Successfully"})
+
+def check_subscription(user):
+    try:
+        subscription = tbl_subscription.objects.get(user=user, is_active=True)
+
+        if subscription.expiry_date < timezone.now():
+            subscription.is_active = False
+            subscription.save()
+            return False
+
+        return True
+
+    except tbl_subscription.DoesNotExist:
+        return False
+
+def Viewdietinfo(request):
+    if 'uid' not in request.session:
+        return redirect('login')
+    user = tbl_user.objects.get(id=request.session['uid'])
+    if not check_subscription(user):
+        return redirect("User:ViewSubscription")
+    viewdata=tbl_recipe.objects.all()  
+    return render(request,"User/Viewdietinfo.html",{'viewdata':viewdata})
+
+def Viewrating(request,mid):
+    parray=[1,2,3,4,5]
+    mid=mid
+    # wdata=tbl_booking.objects.get(id=mid)
+    
+    counts=0
+    counts=stardata=tbl_rating.objects.filter(product=mid).count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.filter(product=mid).order_by('-rating_datetime')
+        for i in stardata:
+            res=res+i.rating_value
+        avg=res//counts
+        # print(avg)
+        return render(request,"User/Viewrating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"User/Viewrating.html",{'mid':mid})
+
+# if 'uid' not in request.session:
+#         return redirect('login')
+#     user = tbl_user.objects.get(id=request.session['uid'])
+#     if not check_subscription(user):
+#         return redirect("User:ViewSubscription")

@@ -448,6 +448,229 @@
 }
 
 
+
+ /* General Styles */
+ * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Form Container */
+    /* form {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    } */
+    form {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0;
+    background-color: white;
+    background: transparent;
+    
+}
+
+    /* Filter Container */
+    .filter-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Filter Row */
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Input Fields */
+    .filter-row input[type="text"],
+    .filter-row select {
+        flex: 1 1 180px;
+        padding: 12px 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #333;
+        background-color: white;
+        transition: all 0.3s ease;
+        outline: none;
+        cursor: pointer;
+    }
+
+    /* Input Focus Effect */
+    .filter-row input[type="text"]:focus,
+    .filter-row select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Input Hover Effect */
+    .filter-row input[type="text"]:hover,
+    .filter-row select:hover {
+        border-color: #764ba2;
+    }
+
+    /* Placeholder Styling */
+    .filter-row input[type="text"]::placeholder {
+        color: #999;
+        font-style: italic;
+    }
+
+    /* Select Arrow Customization */
+    .filter-row select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
+    }
+
+    /* Button Styling */
+    .filter-row button {
+        flex: 0 0 auto;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Button Hover Effect */
+    .filter-row button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    /* Button Active Effect */
+    .filter-row button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Search Icon */
+    .filter-row button i {
+        font-size: 16px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        form {
+            margin: 10px;
+            padding: 15px;
+        }
+
+        .filter-container {
+            padding: 20px;
+        }
+
+        .filter-row {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-row input[type="text"],
+        .filter-row select,
+        .filter-row button {
+            width: 100%;
+            flex: none;
+        }
+
+        .filter-row button {
+            padding: 14px 30px;
+        }
+    }
+
+    /* Animation for form appearance */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    form {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    /* Optional: Style for option elements */
+    .filter-row select option {
+        padding: 10px;
+        background-color: white;
+        color: #333;
+    }
+
+    .filter-row select option:hover {
+        background-color: #667eea;
+        color: white;
+    }
+
+    /* Custom scrollbar for selects (if needed) */
+    .filter-row select::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .filter-row select::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .filter-row select::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 4px;
+    }
+
+    .filter-row select::-webkit-scrollbar-thumb:hover {
+        background: #764ba2;
+    }
+   
+
+    .filter-container {
+    max-width: 700px;   /* controls total width */
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-row input {
+    width: 140px;
+}
+
+.filter-row select {
+    width: 130px;
+}
+
+.filter-row button {
+    padding: 6px 10px;
+}
+
       </style>
       
 
@@ -582,7 +805,7 @@
             </div>
           </div>
           
-          <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+          <!-- <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
             <div class="search-bar row bg-light p-2 my-2 rounded-4">
               <div class="col-md-4 d-none d-md-block">
                 <select class="form-select border-0 bg-transparent">
@@ -601,13 +824,79 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z"/></svg>
               </div>
             </div>
-          </div>
+          </div> -->
+
+          <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+            <div class="search-bar row bg-light p-2 my-2 rounded-4">
+             
+          <form action="{% url 'User:Homepage' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="filter-container">
+                <div class="filter-row">
+            
+                    <input type="text" name="txt_productname" placeholder="Search Product">
+            
+                    <select name="sel_category" id="sel_category">
+                        <option value="">--Select Category--</option>
+                        {% for i in categorydata %}
+                        <option value="{{i.id}}">
+                            {{i.category_name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+            
+                    <select name="sel_subcategory" id="sel_subcategory">
+                        <option value="">--Select Subcategory--</option>
+                    </select>
+            
+                    <select name="sel_brand">
+                        <option value="">--Select Brand--</option>
+                        {% for i in branddata %}
+                        <option value="{{i.id}}">
+                            {{i.brand_name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+            
+                    <button type="submit">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+            
+                </div>
+            </div>
+            </form>
+            </div>
+            </div>
+           
+
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script>
+            $('#sel_category').change(function () {
+                var did = $(this).val();
+                var ur = "{% url 'Seller:Ajaxproduct' %}";
+                $.ajax({
+                    url: ur,
+                    data: { did: did },
+                    success: function (data) {
+                        $('#sel_subcategory').html(data);
+                    }
+                });
+            });
+            </script>
+
           
+
+          
+             
           <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
             <div class="support-box text-end d-none d-xl-block">
+            
               <span class="fs-6 text-muted">For Support?</span>
               <h5 class="mb-0">{{userdata.user_contact}}</h5>
             </div>
+            
 
             <ul class="d-flex justify-content-end list-unstyled m-0">
               <li>
@@ -698,6 +987,12 @@
                     </li>
                     <li class="nav-item">
                       <a href="{% url 'User:Complaint' %}" class="nav-link">Complaint</a>
+                    </li>
+                    <li class="nav-item active">
+                      <a href="{% url 'User:ViewSubscription' %}" class="nav-link">ViewSubscription</a>
+                    </li>
+                    <li class="nav-item active">
+                      <a href="{% url 'User:Viewdietinfo' %}" class="nav-link">Viewdietinfo</a>
                     </li>
                     <li class="nav-item">
                       <a href="{% url 'User:Logout' %}" class="nav-link">Logout</a>
@@ -1135,6 +1430,8 @@
     </section>
 
 
+    
+
     <section class="py-5">
       <div class="container-fluid">
         
@@ -1163,7 +1460,9 @@
                         <a href="{% url 'User:Addwishlist' i.id %}" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
                         <figure>
                           <a href="index.html" title="Product Title">
+                            <a href="{% url 'User:ViewMore' i.id %}" target="_blank" rel="noopener noreferrer">
                             <img src="{{i.product_photo.url}}"  class="tab-image">
+                          </a>
                           </a>
                         </figure>
                         <h3>{{i.product_name}}</h3>

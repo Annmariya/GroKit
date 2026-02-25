@@ -5,6 +5,99 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complaint</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #dfe9f3, #ffffff);
+            margin: 0;
+            padding: 20px;
+        }
+    
+        form {
+            max-width: 1000px;
+            margin: auto;
+        }
+    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+    
+        table:first-of-type {
+            padding: 20px;
+        }
+    
+        td {
+            padding: 12px;
+            border: 1px solid #eee;
+        }
+    
+        tr:first-child {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+    
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+    
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76,175,80,0.3);
+        }
+    
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    
+        a {
+            text-decoration: none;
+            color: white;
+            background: #f44336;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+    
+        a:hover {
+            background: #d32f2f;
+        }
+    
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+
 </head>
 <body>
     <form action="" method="post">

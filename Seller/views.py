@@ -1,8 +1,10 @@
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from Seller.models import*
 from Guest.models import*
 from Admin.models import*
 from User.models import*
+
 
 
 # Create your views here.
@@ -121,24 +123,190 @@ def delegallery(request,gid,pid):
         tbl_gallery.objects.get(id=gid).delete()
         return redirect("Seller:Gallery",pid)
 
+# def ViewBookings(request):
+#     if 'sid' not in request.session:
+#         return redirect('Guest:Login')
+#     else:
+#        bookings = tbl_booking.objects.filter(tbl_cart__product__seller_id=request.session['sid']).distinct()
+#        return render(request, 'Seller/ViewBookings.html', {'bookings': bookings})
+
+
 def ViewBookings(request):
     if 'sid' not in request.session:
         return redirect('Guest:Login')
-    else:
-       bookings = tbl_booking.objects.filter(tbl_cart__product__seller_id=request.session['sid']).distinct()
-       return render(request, 'Seller/ViewBookings.html', {'bookings': bookings})
+
+    bookings = tbl_booking.objects.filter(
+        tbl_cart__product__seller_id=request.session['sid']
+    ).distinct().order_by('-booking_date')
+
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+
+    # Apply date filtering safely
+    if from_date:
+        bookings = bookings.filter(booking_date__gte=from_date)
+
+    if to_date:
+        bookings = bookings.filter(booking_date__lte=to_date)
+
+    context = {
+        'bookings': bookings,
+        'from_date': from_date,
+        'to_date': to_date
+    }
+
+    return render(request, 'Seller/ViewBookings.html', context)
+
+# def UpdateCartStatus(request, cid, status):
+#     cart = tbl_cart.objects.get(id=cid)
+#     cart.cart_status = status
+#     cart.save()
+#     booking = cart.booking
+#     total_items = tbl_cart.objects.filter(booking=booking).count()
+# #     shipped_item=tbl_cart.objects.filter(booking=booking,cart_status=4).count()
+#     delivered_items = tbl_cart.objects.filter(booking=booking,cart_status=6).count()
+    
+#     if total_items == delivered_items:
+#         booking.booking_status = 4
+#         booking.save()
+#     return redirect("Seller:ViewBookings")
+
 
 def UpdateCartStatus(request, cid, status):
     cart = tbl_cart.objects.get(id=cid)
     cart.cart_status = status
     cart.save()
+
     booking = cart.booking
+
     total_items = tbl_cart.objects.filter(booking=booking).count()
-    delivered_items = tbl_cart.objects.filter(booking=booking,cart_status=6).count()
-    if total_items == delivered_items:
+
+    shipped_items = tbl_cart.objects.filter(
+        booking=booking,
+        cart_status__gte=4   # shipped or beyond
+    ).count()
+
+    delivered_items = tbl_cart.objects.filter(
+        booking=booking,
+        cart_status=6
+    ).count()
+
+    # If ALL items shipped → booking ready for delivery
+    if total_items == shipped_items:
         booking.booking_status = 3
-        booking.save()
+
+    # If ALL items delivered → booking completed
+    if total_items == delivered_items:
+        booking.booking_status = 4
+
+    booking.save()
+
     return redirect("Seller:ViewBookings")
+
+
+
+
+
 def Logout(request):
        del request.session['sid']
        return redirect("Guest:Login")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def AssignDelivery(request, bid):
+#     if 'sid' not in request.session:
+#         return redirect('Guest:Login')
+
+#     deliveryboys = tbl_deliveryboy.objects.all()
+
+#     return render(request, 'Seller/AssignDelivery.html', {
+#         'deliveryboys': deliveryboys,
+#         'bid': bid
+#     })
+
+
+# def ConfirmAssign(request, bid, did):
+#     if 'sid' not in request.session:
+#         return redirect('Guest:Login')
+
+#     booking = tbl_booking.objects.get(id=bid)
+#     deliveryboy = tbl_deliveryboy.objects.get(id=did)
+
+#     # Only store delivery person in booking table
+#     booking.deliveryboy = deliveryboy
+#     booking.booking_status = 3  # Assigned
+#     booking.save()
+
+#     return redirect('Seller:ViewBookings')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

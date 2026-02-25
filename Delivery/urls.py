@@ -8,6 +8,9 @@ urlpatterns = [
        path('Changepassword/',views.Changepassword,name="Changepassword"),
        path('Mydelivery/',views.Mydelivery,name="Mydelivery"),
        path('UpdateCartStatus/<int:cid>/<int:status>/',views.UpdateCartStatus,name='UpdateCartStatus'),
+       path('Logout/',views.Logout,name="Logout"),
+        path('Deliveryorder/',views.Deliveryorder,name="Deliveryorder"),
+
 
 
 

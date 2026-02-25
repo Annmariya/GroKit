@@ -52,14 +52,25 @@ def Login(request):
                         return redirect("Admin:Homepage")
                 elif sellercount>0:
                         sellerdata=tbl_seller.objects.get(seller_email=email,seller_password=password)
-                        request.session['sid']=sellerdata.id
-                        return redirect("Seller:Homepage")
+                        if sellerdata.seller_status==1:
+                                request.session['sid']=sellerdata.id
+                                return redirect("Seller:Homepage")
+                        elif sellerdata.seller_status==2:
+                                return render(request,"Guest/Login.html",{'msg':'Account Is Blocked..'})
+                        else:
+                                return render(request,"Guest/Login.html",{'msg':'Verification Pending..'})
+
+
+
                 elif deliverycount>0:
                         deliverydata=tbl_deliveryboy.objects.get(delivery_email=email,delivery_password=password)
-                        request.session['delid']=deliverydata.id
-                        return redirect("Delivery:Homepage")
-                else:
-                        return render(request,"Guest/Login.html",{'msg':'Inavlidlogin'})
+                        if deliverydata.delivery_status==1:
+                                request.session['delid']=deliverydata.id
+                                return redirect("Delivery:Homepage")
+                        elif deliverydata.delivery_status==2:
+                                return render(request,"Guest/Login.html",{'msg':'Account Is Blocked..'})
+                        else:
+                                return render(request,"Guest/Login.html",{'msg':'Inavlidlogin'})
         else:
               return render(request,"Guest/Login.html")   
         

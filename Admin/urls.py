@@ -42,6 +42,7 @@ urlpatterns = [
    path('Mealtype/',views.Mealtype,name="Mealtype"),
    path('Delmealtype/<int:meid>',views.delmealtype,name="delmealtype"),
    path('Recipe/',views.Recipe,name="Recipe"),
+   path('Editrecipe/<int:reid>',views.Editrecipe,name="Editrecipe"),
    path('Delrecipe/<int:reid>',views.delrecipe,name="delrecipe"),
    path('Foodcategory/',views.Foodcategory,name="Foodcategory"),
    path('Delefoodcategory/<int:fid>',views.delefoodcategory,name="delefoodcategory"),

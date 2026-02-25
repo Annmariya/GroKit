@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,6 +90,10 @@
                 <td>
                     <a href="{% url 'User:Addwishlist' i.id %}">Addwishlist</a>
                 </td>
+                <td>
+                    <a href="{% url 'User:ViewMore' i.id %}">Viewmore</a>
+                </td>
+                
                 
             </tr>
             {% endfor %}
@@ -118,4 +122,246 @@
     alert("{{msg}}")
     window.location = "{% url 'User:Viewproduct' %}"
 </script>
+{% endif %} -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Product</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Filter Section */
+    .filter-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+    }
+
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .filter-row input,
+    .filter-row select,
+    .filter-row button {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        min-width: 180px;
+    }
+
+    .filter-row button {
+        background: #111;
+        color: white;
+        cursor: pointer;
+        border: none;
+    }
+
+    .filter-row button:hover {
+        background: #333;
+    }
+
+    /* Product Grid */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .product-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .product-price {
+        color: green;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    /* Updated Button Layout */
+    .product-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        color: white;
+        white-space: nowrap;
+    }
+
+    .btn-cart { background: #28a745; }
+    .btn-wish { background: #5b0404; }
+    .btn-view { background: #5717c4; }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    .out-stock {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+</head>
+
+<body>
+
+<h1><i class="fa fa-box"></i> View Products</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="filter-container">
+    <div class="filter-row">
+
+        <input type="text" name="txt_productname" placeholder="Search Product">
+
+        <select name="sel_category" id="sel_category">
+            <option value="">--Select Category--</option>
+            {% for i in categorydata %}
+            <option value="{{i.id}}">
+                {{i.category_name}}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="sel_subcategory" id="sel_subcategory">
+            <option value="">--Select Subcategory--</option>
+        </select>
+
+        <select name="sel_brand">
+            <option value="">--Select Brand--</option>
+            {% for i in branddata %}
+            <option value="{{i.id}}">
+                {{i.brand_name}}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">
+            <i class="fa fa-search"></i> Search
+        </button>
+
+    </div>
+</div>
+</form>
+
+
+<div class="product-grid">
+
+{% for i in productviewdata %}
+<div class="product-card">
+
+    <img src="{{i.product_photo.url}}" alt="Product Image">
+
+    <div class="product-name">{{ i.product_name }}</div>
+
+    <!-- <div>{{ i.product_details }}</div> -->
+
+    <div class="product-price">₹ {{ i.product_price }}</div>
+
+    {% if i.total_stock <= 0 %}
+        <div class="out-stock">Out Of Stock</div>
+    {% else %}
+        <div class="product-actions">
+            <a class="btn btn-cart" href="{% url 'User:Addtocart' i.id %}">
+                Cart
+            </a>
+
+            <a class="btn btn-wish" href="{% url 'User:Addwishlist' i.id %}">
+                Wishlist
+            </a>
+
+            <a class="btn btn-view" href="{% url 'User:ViewMore' i.id %}">
+                ViewMore
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('#sel_category').change(function () {
+    var did = $(this).val();
+    var ur = "{% url 'Seller:Ajaxproduct' %}";
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function (data) {
+            $('#sel_subcategory').html(data);
+        }
+    });
+});
+</script>
+
+{% if msg %}
+<script>
+alert("{{msg}}")
+window.location = "{% url 'User:Viewproduct' %}"
+</script>
 {% endif %}
+
+</body>
+</html>

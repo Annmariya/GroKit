@@ -9,6 +9,7 @@ urlpatterns = [
        path('Complaint/',views.Complaint,name="Complaint"),
        path('delecomplaint/<int:cid>',views.delecomplaint,name="delecomplaint"),
        path('Viewproduct/',views.Viewproduct,name="Viewproduct"),
+       path('ViewMore/<int:pid>/', views.ViewMore, name='ViewMore'),
        path('Addtocart/<int:pid>/', views.Addtocart, name='Addtocart'),
        path('Mycart/', views.MyCart, name='MyCart'),
        path('DelCart/<int:did>/', views.DelCart, name='DelCart'),
@@ -24,9 +25,14 @@ urlpatterns = [
        path('Delwishlist/<int:wid>/', views.Delwishlist, name='Delwishlist'),
        path('timerecipe/', views.time_based_recipe, name='timerecipe'),
        path('Addtocart1/<int:pid>/', views.Addtocart1, name='Addtocart1'),
+       path('rating/<int:mid>',views.rating,name="rating"), 
+       path('ajaxstar/',views.ajaxstar,name="ajaxstar"),
+       path('starrating/',views.starrating,name="starrating"), 
+       path('ViewSubscription/',views.ViewSubscription,name="ViewSubscription"), 
+       path('Subscription/<int:planid>',views.Subscription,name="Subscription"), 
+       path('Viewdietinfo/',views.Viewdietinfo,name="Viewdietinfo"), 
+       path('Viewrating/<int:mid>',views.Viewrating,name="Viewrating"), 
 
-      
+       
 
-
-      
 ]

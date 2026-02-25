@@ -1,0 +1,75 @@
+<!-- <h2>Select Delivery Person</h2>
+
+<table border="1" width="100%" cellpadding="10">
+<tr>
+    <th>SNO</th>
+    <th>Photo</th>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Place</th>
+    <th>Action</th>
+</tr>
+
+{% for d in deliveryboys %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td><img src="{{ d.delivery_photo.url }}" width="80"></td>
+    <td>{{ d.delivery_name }}</td>
+    <td>{{ d.delivery_contact }}</td>
+    <td>{{ d.delivery_place.place_name }}</td>
+    <td>
+        <a href="{% url 'Seller:ConfirmAssign' bid d.id %}"
+           style="padding:5px 10px; background:#0d6efd; color:white; border-radius:4px;">
+           Assign
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</table> -->
+
+
+<h2>Select Delivery Person</h2>
+
+<table border="1" width="100%" cellpadding="10">
+<tr>
+    <th>SNO</th>
+    <th>Photo</th>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Place</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for d in deliveryboys %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td><img src="{{ d.delivery_photo.url }}" width="80"></td>
+    <td>{{ d.delivery_name }}</td>
+    <td>{{ d.delivery_contact }}</td>
+    <td>{{ d.delivery_place.place_name }}</td>
+
+    <td>
+        {% if d.delivery_status == 1 %}
+            <span style="color:green;font-weight:bold;">● Available</span>
+        {% else %}
+            <span style="color:red;font-weight:bold;">● Busy</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if d.delivery_status == 1 %}
+            <a href="{% url 'Seller:ConfirmAssign' bid d.id %}"
+               style="padding:5px 10px; background:#0d6efd; color:white; border-radius:4px;">
+               Assign
+            </a>
+        {% else %}
+            <button disabled
+               style="padding:5px 10px; background:gray; color:white; border-radius:4px;">
+               Busy
+            </button>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>

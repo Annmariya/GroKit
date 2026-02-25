@@ -32,3 +32,18 @@ class tbl_cart(models.Model):
 class tbl_wishlist(models.Model):
     product=models.ForeignKey(tbl_product,on_delete=models.CASCADE)
     user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)  
+
+class tbl_rating(models.Model):
+    rating_datetime=models.DateTimeField(auto_now_add=True)
+    rating_content=models.CharField(max_length=50)
+    rating_value=models.IntegerField(default=0)
+    product=models.ForeignKey(tbl_product,on_delete=models.CASCADE,null=True)
+    user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)  
+    recipe=models.ForeignKey(tbl_recipe,on_delete=models.CASCADE,null=True)  
+
+class tbl_subscription(models.Model):
+    subscription_date = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateTimeField(null=True, blank=True)
+    plan = models.ForeignKey(tbl_plan, on_delete=models.CASCADE)
+    user = models.ForeignKey(tbl_user, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)

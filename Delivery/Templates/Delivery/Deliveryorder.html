@@ -1,0 +1,600 @@
+{% extends 'Delivery/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br>{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Delivery - FreshGrocer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #f8f5f0;
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2d3e2d;
+        }
+
+        .grocery-dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Fresh Header Section */
+        .page-header {
+            margin-bottom: 3rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            background: #e8f5e8;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.1);
+        }
+
+        .header-text h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fdfffd;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p {
+            color: #d8f8d8;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .fresh-badge {
+            background: #e8f5e8;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            color: #2d5e2d;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+        }
+
+        .fresh-badge span {
+            font-size: 1.2rem;
+        }
+
+        /* Order Cards Container */
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Individual Order Card */
+        .order-card {
+            background: #ffffff;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(45, 94, 45, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e8f0e8;
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(76, 175, 80, 0.15);
+            border-color: #c5e0c5;
+        }
+
+        /* Order Header with Fresh Theme */
+        .order-header {
+            background: #f4fbf4;
+            padding: 1.25rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            border-bottom: 2px dashed #d4e8d4;
+        }
+
+        .order-badge {
+            background: #ffffff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+            border: 1px solid #d4e8d4;
+        }
+
+        .order-badge span {
+            color: #7a9e7a;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .order-badge strong {
+            color: #2d5e2d;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+            background: #ffffff;
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+            border-radius: 50px;
+            border: 1px solid #d4e8d4;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th {
+            background: #fafdfa;
+            color: #5a7e5a;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem 2rem;
+            text-align: left;
+            border-bottom: 2px solid #d4e8d4;
+        }
+
+        .products-table td {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e8f0e8;
+            color: #3a4e3a;
+        }
+
+        /* Product Cell with Fresh Style */
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .product-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #f4fbf4;
+            border: 2px solid #e8f5e8;
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.1);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #2d5e2d;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-desc {
+            color: #7a9e7a;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: #4caf50;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: #e8f5e8;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 50px;
+        }
+
+        /* Quantity Badge */
+        .quantity-badge {
+            background: #f4fbf4;
+            color: #4caf50;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            display: inline-block;
+            font-size: 1.1rem;
+            border: 2px solid #e8f5e8;
+        }
+
+        /* Amount Cell */
+        .amount-cell {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #e67e22;
+            background: #fff4e6;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        /* Fresh Status Badges */
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-delivered {
+            background: #e8f5e8;
+            color: #2d5e2d;
+            border: 2px solid #a5d6a5;
+        }
+
+        .status-delivered span {
+            font-size: 1.1rem;
+        }
+
+        .status-waiting {
+            background: #fff4e6;
+            color: #e67e22;
+            border: 2px solid #ffd8b0;
+        }
+
+        .status-waiting span {
+            font-size: 1.1rem;
+        }
+
+        /* SNO Cell */
+        .sno-cell {
+            font-weight: 700;
+            color: #4caf50;
+            font-size: 1.1rem;
+            background: #f4fbf4;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 4rem;
+            text-align: center;
+            border: 2px dashed #c5e0c5;
+        }
+
+        .empty-state p {
+            color: #7a9e7a;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .products-table th,
+            .products-table td {
+                padding: 1rem;
+            }
+
+            .sno-cell {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header-text h1 {
+                font-size: 2.2rem;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .customer-info {
+                margin-left: 0;
+            }
+
+            .product-cell {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .products-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .products-table td {
+                min-width: 150px;
+            }
+        }
+
+        /* Fresh Animations */
+        @keyframes freshPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .order-card {
+            animation: freshPop 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        .order-card:nth-child(1) { animation-delay: 0.1s; }
+        .order-card:nth-child(2) { animation-delay: 0.2s; }
+        .order-card:nth-child(3) { animation-delay: 0.3s; }
+        .order-card:nth-child(4) { animation-delay: 0.4s; }
+        .order-card:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Fresh Elements */
+        .fresh-tag {
+            position: absolute;
+            top: -5px;
+            right: 20px;
+            background: #e67e22;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transform: rotate(2deg);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e8f5e8;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a5d6a5;
+            border-radius: 6px;
+            border: 3px solid #e8f5e8;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4caf50;
+        }
+
+        /* Table row hover */
+        .products-table tbody tr:hover td {
+            background: #fafdfa;
+            transition: background 0.3s ease;
+        }
+
+        /* Price styling */
+        .product-price::before {
+            content: '₹';
+            margin-right: 2px;
+            opacity: 0.7;
+        }
+
+        /* Additional Grocery Elements */
+        .grocery-icon {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .weight-tag {
+            font-size: 0.8rem;
+            color: #7a9e7a;
+            margin-left: 5px;
+        }
+
+        /* Special offer tag */
+        .offer-tag {
+            background: #e67e22;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grocery-dashboard">
+        <div class="page-header">
+            <div class="header-left">
+                <div class="header-icon">
+                    🛒
+                </div>
+                <div class="header-text">
+                    <h1>Your Deliveries</h1>
+                    <p>Fresh from the farm to your doorstep 🌱</p>
+                </div>
+            </div>
+            <div class="fresh-badge">
+                <span>🌿</span> Today's Deliveries
+            </div>
+        </div>
+
+        <div class="orders-container">
+            {% for b in deliveryorder %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-badge">
+                        <span>📋 Order #</span>
+                        <strong>{{ b.id }}</strong>
+                    </div>
+                    <div class="order-badge">
+                        <span>📅 Date</span>
+                        <strong>{{ b.booking_date }}</strong>
+                    </div>
+                    <div class="order-badge">
+                        <span>💰 Total</span>
+                        <strong>₹{{ b.booking_amount }}</strong>
+                    </div>
+                    <div class="customer-info">
+                        <div class="customer-avatar">
+                            {{ b.user.user_name|first|upper }}
+                        </div>
+                        <div>
+                            <div style="color: #7a9e7a; font-size: 0.8rem;">Customer</div>
+                            <div style="color: #2d5e2d; font-weight: 600;">{{ b.user.user_name }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Products</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Delivery Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in b.tbl_cart_set.all %}
+                        {% if c.product.seller_id == request.session.sid %}
+                        <tr>
+                            <td>
+                                <div class="sno-cell">{{ forloop.counter }}</div>
+                            </td>
+                            <td>
+                                <div class="product-cell">
+                                    <div class="product-image">
+                                        <img src="{{ c.product.product_photo.url }}" width="100">
+                                    </div>
+                                    <div class="product-details">
+                                        <div class="product-name">
+                                            {{ c.product.product_name }}
+                                            <span class="weight-tag"></span>
+                                        </div>
+                                        <div class="product-desc">{{ c.product.product_description|truncatechars:40 }}</div>
+                                        <div class="product-price">₹{{ c.product.product_price }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="quantity-badge">{{ c.cart_quantity }}</span>
+                            </td>
+                            <td>
+                                <span class="amount-cell">₹{{ c.cart_quantity|mul:c.product.product_price }}</span>
+                            </td>
+                            <td>
+                                {% if c.cart_status == 7 %}
+                                <span class="status-badge status-delivered">
+                                    <span>✅</span>  Delivered Successfully
+                                </span>
+                                {% else %}
+                                <span class="status-badge status-waiting">
+                                    <span>🕐</span> Processing
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-icon">🥬</div>
+                <p>No fresh deliveries found</p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">New orders will appear here</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
+
+{% endblock content %}

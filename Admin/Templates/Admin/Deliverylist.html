@@ -1,0 +1,277 @@
+{% extends 'Admin/Head.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Page Wrapper */
+.admin-wrapper {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Card */
+.admin-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+}
+
+/* Title */
+.admin-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4b2aad;
+    margin-bottom: 20px;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.admin-table th {
+    color: #4b2aad;
+    font-weight: 600;
+}
+
+.admin-table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Action Buttons */
+.action-btn {
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    margin: 2px;
+    transition: 0.3s;
+}
+
+.accept-btn {
+    background: #d4edda;
+    color: #155724;
+}
+
+.reject-btn {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #fff;
+    display: inline-block;
+}
+
+.status-verified {
+    background: #28a745;
+}
+
+.status-rejected {
+    background: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-table th, .admin-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+</style>
+
+<div class="admin-wrapper">
+
+    <!-- All Sellers -->
+    <div class="admin-card">
+        <div class="admin-title">Seller List</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Establish Date</th>
+                        <th>License No</th>
+                        <th>Owner Name</th>
+                        <th>License Proof</th>
+                        <th>Owner Proof</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in sellerdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.seller_name }}</td>
+                        <td>{{ i.seller_contact }}</td>
+                        <td>{{ i.seller_email }}</td>
+                        <td>{{ i.seller_place.place_name }}</td>
+                        <td>{{ i.seller_establishdate }}</td>
+                        <td>{{ i.seller_licenseno }}</td>
+                        <td>{{ i.seller_ownername }}</td>
+                        <td><img src="{{ i.seller_licenseproof.url }}" alt="License Proof"></td>
+                        <td><img src="{{ i.seller_ownerproof.url }}" alt="Owner Proof"></td>
+                        <td>
+                            {% if i.seller_status == 0 %}
+                                <a href="{% url 'Admin:acceptseller' i.id %}" class="action-btn accept-btn">Accept</a>
+                                <a href="{% url 'Admin:rejectseller' i.id %}" class="action-btn reject-btn">Reject</a>
+                            {% elif i.seller_status == 1 %}
+                                <span class="status-badge status-verified">Verified</span>
+                            {% elif i.seller_status == 2 %}
+                                <span class="status-badge status-rejected">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11">No sellers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Verified Sellers -->
+    <div class="admin-card">
+        <div class="admin-title">Verified Seller List</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Establish Date</th>
+                        <th>License No</th>
+                        <th>Owner Name</th>
+                        <th>License Proof</th>
+                        <th>Owner Proof</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in accsellerdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.seller_name }}</td>
+                        <td>{{ i.seller_contact }}</td>
+                        <td>{{ i.seller_email }}</td>
+                        <td>{{ i.seller_place.place_name }}</td>
+                        <td>{{ i.seller_establishdate }}</td>
+                        <td>{{ i.seller_licenseno }}</td>
+                        <td>{{ i.seller_ownername }}</td>
+                        <td><img src="{{ i.seller_licenseproof.url }}" alt="License Proof"></td>
+                        <td><img src="{{ i.seller_ownerproof.url }}" alt="Owner Proof"></td>
+                        <td>
+                            <span class="status-badge status-verified">Verified</span>
+                        </td>
+                        <td>  <a href="{% url 'Admin:rejectseller' i.id %}" class="action-btn reject-btn">Reject</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11">No verified sellers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Rejected Sellers -->
+    <div class="admin-card">
+        <div class="admin-title">Rejected Seller List</div>
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>SL.NO</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Place</th>
+                        <th>Establish Date</th>
+                        <th>License No</th>
+                        <th>Owner Name</th>
+                        <th>License Proof</th>
+                        <th>Owner Proof</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in rejsellerdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.seller_name }}</td>
+                        <td>{{ i.seller_contact }}</td>
+                        <td>{{ i.seller_email }}</td>
+                        <td>{{ i.seller_place.place_name }}</td>
+                        <td>{{ i.seller_establishdate }}</td>
+                        <td>{{ i.seller_licenseno }}</td>
+                        <td>{{ i.seller_ownername }}</td>
+                        <td><img src="{{ i.seller_licenseproof.url }}" alt="License Proof"></td>
+                        <td><img src="{{ i.seller_ownerproof.url }}" alt="Owner Proof"></td>
+                        <td>
+                            <span class="status-badge status-rejected">Rejected</span>
+                        </td>
+                        <td><a href="{% url 'Admin:acceptseller' i.id %}" class="action-btn accept-btn">Accept</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11">No rejected sellers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Admin:SellerList' %}";
+</script>
+{% endif %}
+
+{% endblock %}
