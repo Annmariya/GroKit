@@ -4,6 +4,7 @@ from Seller.models import*
 from Guest.models import*
 from Admin.models import*
 from User.models import*
+from django.db.models import Sum
 
 
 
@@ -62,7 +63,15 @@ def Product(request):
         subcategorydata=tbl_subcategory.objects.all()
         categorydata=tbl_category.objects.all()
         branddata=tbl_brand.objects.all()
-        productdata=tbl_product.objects.all()  
+        # productdata=tbl_product.objects.all() 
+
+        # recent_products = tbl_product.objects.filter(
+        #     seller=sellerdata
+        # ).order_by('-id')[:5]
+        productdata = tbl_product.objects.filter(seller=sellerdata)
+        total_value = productdata.aggregate(total=Sum('product_price'))['total'] or 0
+        recent_products = productdata.order_by('-id')[:5]
+        
         if request.method=="POST":
                 brand=tbl_brand.objects.get(id=request.POST.get("sel_brand"))
                 subcategory=tbl_subcategory.objects.get(id=request.POST.get("sel_subcategory"))
@@ -75,7 +84,7 @@ def Product(request):
                 return render(request,"Seller/Product.html",{'msg':"Data inserted"})
         
         else:
-                return render(request,"Seller/Product.html",{'subcategorydata':subcategorydata,'categorydata':categorydata,'branddata':branddata,'sellerdata':sellerdata,'productdata':productdata})
+                return render(request,"Seller/Product.html",{'subcategorydata':subcategorydata,'categorydata':categorydata,'branddata':branddata,'sellerdata':sellerdata,'productdata':productdata,'recent_products':recent_products,'total_value':total_value})
 
 def Ajaxproduct(request):
         categoryid=request.GET.get('did')

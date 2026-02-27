@@ -52,7 +52,8 @@ urlpatterns = [
    path('Delplan/<int:plid>',views.delplan,name="delplan"),
    path('Form/',views.Form,name="Form"),
    path('Logout/',views.Logout,name="Logout"),
-
+# Report
+   path('plan-report/', views.plan_report, name='plan_report'),
 
 
 

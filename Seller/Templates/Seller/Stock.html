@@ -1,48 +1,391 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock</title>
-</head>
-<body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <h1>Stock</h1>
-        <table border="2">
-            <tr>
-                <td>Stock</td>
-                <td><input type="number"name="txt_stock" id=""></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center"> <input type="submit" value="Submit"></td>
-                <td></td>
-            </tr>
-        </table>
-        <br>
-        <br><br>
-        <h1>StockList</h1>
-        <table border="2">
-           <tr>
-               <td>S.NO</td>
-               <td>Stock Count</td>
-               <td>Action</td>
-           </tr>
-           {% for i in stockdata %}
-           <tr>
-               <td>{{ forloop.counter}}</td>
-               <td>{{i.stock_count}}</td>
-               <td><a href="{%  url 'Seller:delestock' i.id  pid %}">Delete</a></td>
-           </tr>
-           {% endfor %}
-         </table>
-    </form>
-</body>
-</html>
-{% if msg %}
-<script>
-    alert("{{msg}}")
-    window.location="{% url 'Seller:Stock' pid %}"
-</script>
-{% endif %}
+{% extends 'Seller/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br>
+
+<!-- Poppins + fallback (add to head via block if needed, but we'll include here for isolation) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome 6 (sharp icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(145deg, #f0f5fa 0%, #e9f0f7 100%);
+        font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        padding: 2rem 1.5rem;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #1b2b40;
+    }
+
+    .glass-panel {
+        max-width: 1100px;
+        width: 100%;
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 42px;
+        box-shadow: 0 30px 60px rgba(20, 50, 80, 0.12), 0 10px 30px rgba(0,20,40,0.1);
+        padding: 2.5rem 2.8rem;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    /* section titles */
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.8rem;
+    }
+    .section-title i {
+        font-size: 2rem;
+        background: #1e3b5c;
+        color: white;
+        padding: 12px;
+        border-radius: 24px;
+        box-shadow: 0 12px 18px -8px rgba(20,55,110,0.3);
+    }
+    .section-title h2 {
+        font-weight: 600;
+        font-size: 1.9rem;
+        letter-spacing: -0.3px;
+        color: #13293f;
+    }
+    .section-title span {
+        background: #e1ecfe;
+        color: #175a9c;
+        margin-left: 14px;
+        padding: 0.2rem 1.2rem;
+        border-radius: 40px;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* form card — horizontal, modern */
+    .stock-form {
+        background: white;
+        border-radius: 30px;
+        padding: 1.8rem 2rem;
+        margin-bottom: 2.5rem;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.02), 0 8px 20px rgba(0,32,64,0.05);
+        border: 1px solid #dde7f0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 2rem;
+    }
+
+    .stock-form .field {
+        flex: 2 1 260px;
+    }
+
+    .stock-form .field label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #46688a;
+        margin-bottom: 0.5rem;
+    }
+
+    .stock-form .field label i {
+        margin-right: 6px;
+        font-size: 0.9rem;
+        color: #2575c7;
+    }
+
+    .stock-form .field input {
+        width: 100%;
+        padding: 1rem 1.4rem;
+        background: #f3f8ff;
+        border: 2px solid transparent;
+        border-radius: 28px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        font-family: 'Poppins', monospace;
+        transition: 0.2s;
+        box-shadow: 0 2px 6px rgba(0, 30, 60, 0.05);
+        color: #0e263b;
+    }
+    .stock-form .field input:focus {
+        outline: none;
+        border-color: #2680eb;
+        background: #ffffff;
+        box-shadow: 0 8px 18px -8px rgba(30,110,220,0.3);
+    }
+
+    .submit-btn-modern {
+        background: #0a2942;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 1rem 2.8rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 18px 28px -10px #0a2942a0;
+        border: 1px solid rgba(255,255,255,0.2);
+        letter-spacing: 0.3px;
+    }
+    .submit-btn-modern:hover {
+        background: #1e3f60;
+        transform: scale(1.02);
+        box-shadow: 0 22px 32px -10px #12334e;
+    }
+    .submit-btn-modern i {
+        font-size: 1.2rem;
+    }
+
+    /* pid tag */
+    .pid-context {
+        background: #dbeafe;
+        padding: 0.3rem 1.6rem;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #1f5090;
+        display: inline-block;
+        border: 1px dashed #3b7bc9;
+    }
+
+    /* inventory table — clean & borderless */
+    .table-wrap {
+        background: white;
+        border-radius: 32px;
+        padding: 0 0.2rem 0.2rem 0.2rem;
+        box-shadow: 0 12px 28px rgba(0,20,40,0.06);
+        overflow-x: auto;
+        margin-top: 0.7rem;
+    }
+
+    .inventory-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1rem;
+        border-style: hidden;
+        border-radius: 32px;
+    }
+
+    .inventory-table th {
+        background: #eef4fb;
+        font-weight: 600;
+        color: #23456b;
+        padding: 1.4rem 1rem 1.1rem 2rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        border-bottom: 2px solid #cbd9ec;
+    }
+
+    .inventory-table td {
+        padding: 1.3rem 1rem 1.3rem 2rem;
+        border-bottom: 1px solid #e5ecf5;
+        color: #1f3c5a;
+        font-weight: 450;
+    }
+
+    .inventory-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .counter-badge {
+        background: #d2e2fc;
+        color: #103f72;
+        padding: 0.3rem 1.3rem;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    .stock-digit {
+        background: #e3eefb;
+        padding: 0.5rem 1.5rem;
+        border-radius: 40px;
+        font-weight: 600;
+        color: #003e6e;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .action-link {
+        background: #fff1f0;
+        color: #b12e2e;
+        padding: 0.45rem 1.5rem;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #ffcdc7;
+    }
+    .action-link:hover {
+        background: #b12e2e;
+        color: white;
+        border-color: #942020;
+    }
+
+    .empty-message td {
+        padding: 3rem;
+        text-align: center;
+        background: #fafdff;
+        color: #6883a3;
+        font-weight: 400;
+    }
+
+    .footer-note {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.2rem;
+        padding: 0 0.5rem;
+        font-size: 0.85rem;
+        color: #527495;
+    }
+
+    hr {
+        border: 1px solid #d5e2f0;
+        margin: 1.5rem 0 0.5rem;
+        opacity: 0.5;
+    }
+
+    /* adjust for header/footer integration */
+    .content-wrapper {
+        min-height: calc(100vh - 60px); /* adjust based on your header/footer height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+    }
+
+    /* override body styles that might conflict with header/footer */
+    body {
+        background: transparent;
+        padding: 0;
+        min-height: auto;
+        display: block;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="glass-panel">
+        <!-- HEADER with product context (visible) -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-cubes" style="font-size: 2.5rem; color: #1d3b60;"></i>
+                <span style="font-size: 2rem; font-weight: 600; color: #0a253c;">stock<span style="font-weight: 300; margin-left: 4px; color: #3b6790;">board</span></span>
+            </div>
+            <!-- <div class="pid-context">
+                <i class="fas fa-tag" style="margin-right: 6px;"></i>product ID: {{ pid|default:"—" }}
+            </div> -->
+        </div>
+
+        <!-- ADD STOCK CARD (form) -->
+        <div class="section-title">
+            <i class="fas fa-circle-plus"></i>
+            
+            <h2>add stock</h2>
+            <!-- <span><i class="fas fa-pen"></i> new count</span> -->
+        </div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <!-- hidden pid field (for reference, but url already contains it) -->
+            <input type="hidden" name="pid" value="{{ pid }}">
+
+            <div class="stock-form">
+                <div class="field">
+                    <label for="stockQty"><i class="fas fa-hashtag"></i>stock quantity</label>
+                    <input type="number" name="txt_stock" id="stockQty" placeholder="e.g. 128" min="0" step="1" required>
+                </div>
+                <button type="submit" class="submit-btn-modern">
+                    <i class="fas fa-upload-alt"></i> submit entry
+                </button>
+            </div>
+        </form>
+
+        <!-- STOCK LIST SECTION -->
+        <div class="section-title" style="margin-top: 1.8rem;">
+            <i class="fas fa-table-cells"></i>
+            <h2>stock list</h2>
+            <span><i class="fas fa-layer-group"></i> {{ stockdata|length }} record(s)</span>
+        </div>
+
+        <div class="table-wrap">
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>stock count</th>
+                        <th>action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in stockdata %}
+                    <tr>
+                        <td><span class="counter-badge">#{{ forloop.counter }}</span></td>
+                        <td><span class="stock-digit"><i class="fas fa-boxes-stacked" style="opacity: 0.7;"></i> {{ i.stock_count }}</span></td>
+                        <td>
+                            <a href="{% url 'Seller:delestock' i.id pid %}" class="action-link" onclick="return confirm('Delete this stock row?');">
+                                <i class="fas fa-trash-can"></i> delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-message">
+                        <td colspan="3">
+                            <i class="fas fa-archive" style="font-size: 2.8rem; opacity: 0.3; margin-bottom: 0.7rem; display: block;"></i>
+                            no stock entries found · add using the form above
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- subtle extra info (same as original functionality) -->
+        <!-- <div class="footer-note">
+            <span><i class="far fa-trash-alt" style="margin-right: 4px;"></i> delete is immediate</span>
+            <span><i class="far fa-bell"></i> changes reflect after submit</span>
+        </div> -->
+
+        <!-- tiny divider (style) -->
+        <hr>
+
+        <!-- inline message + redirect (exactly as original, but with smooth style) -->
+        {% if msg %}
+        <script>
+            (function() {
+                alert("{{ msg|escapejs }}");
+                window.location.href = "{% url 'Seller:Stock' pid %}";
+            })();
+        </script>
+        {% endif %}
+
+        <!-- footnote / seller hint (non-intrusive) -->
+        <div style="font-size: 0.8rem; color: #7e99b3; text-align: right; margin-top: 0.3rem;">
+            <i class="fas-regular fa-circle-check"></i> current product stock overview
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -32,6 +32,7 @@ urlpatterns = [
        path('Subscription/<int:planid>',views.Subscription,name="Subscription"), 
        path('Viewdietinfo/',views.Viewdietinfo,name="Viewdietinfo"), 
        path('Viewrating/<int:mid>',views.Viewrating,name="Viewrating"), 
+       
 
        
 

@@ -1,7 +1,14 @@
+from collections import Counter
 from django.shortcuts import render,redirect
 from Admin.models import*
 from Guest.models import*
 from User.models import*
+# In your admin views.py file
+from django.db.models import Count, Sum
+from django.utils import timezone
+from datetime import timedelta
+import json
+
 
 
 def District(request):
@@ -465,3 +472,97 @@ def Form(request):
 def Logout(request):
        del request.session['mid']
        return redirect("Guest:Login")
+
+# ReportViewSection
+
+
+
+
+def plan_report(request):
+    # Get all plans with subscription statistics
+    plans = tbl_plan.objects.all()
+    
+    # Data for bar chart - subscriptions per plan
+    plan_names = []
+    subscription_counts = []
+    revenue_data = []
+    active_subscriptions = []
+    
+    # Create a list for template iteration with actual plan objects
+    subscription_stats_list = []
+    
+    for plan in plans:
+        # Get all subscriptions for this plan
+        subscriptions = tbl_subscription.objects.filter(plan=plan)
+        
+        # Count total subscriptions
+        total_count = subscriptions.count()
+        
+        # Count active subscriptions (not expired)
+        active_count = subscriptions.filter(
+            is_active=True, 
+            expiry_date__gte=timezone.now()
+        ).count()
+        
+        # Calculate revenue from this plan (based on active subscriptions)
+        revenue = active_count * plan.plan_amount
+        
+        plan_names.append(plan.plan_name)
+        subscription_counts.append(total_count)
+        active_subscriptions.append(active_count)
+        revenue_data.append(revenue)
+        
+        # Add to the list with the actual plan object
+        subscription_stats_list.append({
+            'plan': plan,
+            'total': total_count,
+            'active': active_count,
+            'revenue': revenue
+        })
+    
+    # Get subscription trends (last 7 days)
+    last_7_days = []
+    daily_subscriptions = []
+    
+    for i in range(6, -1, -1):
+        date = timezone.now().date() - timedelta(days=i)
+        last_7_days.append(date.strftime('%Y-%m-%d'))
+        
+        count = tbl_subscription.objects.filter(
+            subscription_date__date=date
+        ).count()
+        daily_subscriptions.append(count)
+    
+    # Most popular plan
+    most_popular_plan = None
+    most_popular_index = -1
+    if plans and subscription_counts:
+        max_index = subscription_counts.index(max(subscription_counts))
+        most_popular_plan = {
+            'name': plan_names[max_index],
+            'count': subscription_counts[max_index]
+        }
+        most_popular_index = max_index
+    
+    # Total revenue from active subscriptions
+    total_active_revenue = sum(revenue_data)
+    
+    # Total active subscriptions
+    total_active_subs = sum(active_subscriptions)
+    
+    context = {
+        'plan_names': json.dumps(plan_names),
+        'subscription_counts': json.dumps(subscription_counts),
+        'active_subscriptions': json.dumps(active_subscriptions),
+        'revenue_data': json.dumps(revenue_data),
+        'last_7_days': json.dumps(last_7_days),
+        'daily_subscriptions': json.dumps(daily_subscriptions),
+        'plans': plans,
+        'subscription_stats': subscription_stats_list,  # Now a list of dicts with plan objects
+        'most_popular_plan': most_popular_plan,
+        'most_popular_index': most_popular_index,
+        'total_active_revenue': total_active_revenue,
+        'total_active_subs': total_active_subs,
+    }
+    
+    return render(request, 'Admin/plan_report.html', context)

@@ -15,6 +15,7 @@ class tbl_product(models.Model):
     subcategory=models.ForeignKey(tbl_subcategory,on_delete=models.CASCADE)
     brand=models.ForeignKey(tbl_brand,on_delete=models.CASCADE)
     seller=models.ForeignKey(tbl_seller,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 class tbl_stock(models.Model):
     stock_date=models.DateField(auto_now_add=True)

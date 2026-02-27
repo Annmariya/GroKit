@@ -1,0 +1,593 @@
+{% extends 'Admin/Head.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Report - GroKit Admin</title>
+    
+    <!-- Chart.js for beautiful charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Bootstrap 5 for cards and layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #1e3b5c;
+            --secondary-color: #2575c7;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+        
+        body {
+            background: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .report-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .page-header .badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        
+        .stat-icon.blue { background: #e3f2fd; color: #1976d2; }
+        .stat-icon.green { background: #e8f5e9; color: #388e3c; }
+        .stat-icon.orange { background: #fff3e0; color: #f57c00; }
+        .stat-icon.purple { background: #f3e5f5; color: #7b1fa2; }
+        
+        .stat-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: #333;
+        }
+        
+        .stat-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Chart Cards */
+        .chart-card {
+            background: white;
+            border-radius: 25px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .chart-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            background: #e8eff7;
+            padding: 10px;
+            border-radius: 12px;
+        }
+        
+        .chart-title h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin: 1rem 0;
+        }
+        
+        /* Plans Table */
+        .table-card {
+            background: white;
+            border-radius: 25px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .table {
+            margin: 0;
+        }
+        
+        .table thead th {
+            background: #f8fafc;
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem;
+        }
+        
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .plan-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        .popular-tag {
+            background: var(--warning-color);
+            color: #000;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .export-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .export-btn:hover {
+            background: #0a2942;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .report-container {
+                padding: 1rem;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-chart-bar me-2"></i>Plan Subscription Report</h1>
+            <p class="text-muted">Analytics and insights for subscription plans</p>
+        </div>
+        <div>
+            <span class="badge"><i class="far fa-calendar-alt me-2"></i>{% now "F j, Y" %}</span>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ plans|length }}</h3>
+                <p>Total Plans</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_active_subs }}</h3>
+                <p>Active Subscriptions</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-content">
+                <h3>₹{{ total_active_revenue }}</h3>
+                <p>Monthly Revenue</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ most_popular_plan.name|default:"-" }}</h3>
+                <p>Most Popular ({{ most_popular_plan.count|default:"0" }} subs)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Bar Chart - Subscriptions per Plan -->
+    <div class="chart-card">
+        <div class="chart-title">
+            <i class="fas fa-chart-bar"></i>
+            <h2>Subscription Distribution by Plan</h2>
+            <span class="popular-tag" style="margin-left: auto;">Total: {{ subscription_stats|length }} Plans</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="planChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Two Column Charts -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Active vs Total Subscriptions</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Revenue by Plan (₹)</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Subscriptions Chart -->
+    <div class="chart-card">
+        <div class="chart-title">
+            <i class="fas fa-calendar-week"></i>
+            <h2>Daily Subscriptions (Last 7 Days)</h2>
+        </div>
+        <div class="chart-container" style="height: 250px;">
+            <canvas id="dailyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Plans Details Table -->
+    <div class="table-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="chart-title" style="margin-bottom: 0;">
+                <i class="fas fa-table"></i>
+                <h2>Plan Details & Statistics</h2>
+            </div>
+            <button class="export-btn" onclick="exportToExcel()">
+                <i class="fas fa-download"></i> Export Report
+            </button>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Plan Name</th>
+                        <th>Duration</th>
+                        <th>Price (₹)</th>
+                        <th>Total Subs</th>
+                        <th>Active Subs</th>
+                        <th>Revenue (₹)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in subscription_stats %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.plan.plan_name }}</strong>
+                            {% if forloop.counter0 == most_popular_index %}
+                                <span class="popular-tag">Most Popular</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.plan.plan_duration }} days</td>
+                        <td>₹{{ item.plan.plan_amount }}</td>
+                        <td><span class="plan-badge">{{ item.total }}</span></td>
+                        <td>{{ item.active }}</td>
+                        <td><strong>₹{{ item.revenue }}</strong></td>
+                        <td>
+                            {% if item.active > 0 %}
+                                <span style="color: var(--success-color); font-weight: 600;">Active</span>
+                            {% else %}
+                                <span style="color: var(--danger-color); font-weight: 600;">No Active</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-box-open fa-3x mb-3" style="opacity: 0.3;"></i>
+                            <p>No plans available</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Initialization Script -->
+<script>
+    // Parse data from Django
+    const planNames = {{ plan_names|safe }};
+    const subscriptionCounts = {{ subscription_counts|safe }};
+    const activeSubscriptions = {{ active_subscriptions|safe }};
+    const revenueData = {{ revenue_data|safe }};
+    const last7Days = {{ last_7_days|safe }};
+    const dailySubscriptions = {{ daily_subscriptions|safe }};
+
+    // Color palette
+    const colors = [
+        '#1e3b5c', '#2575c7', '#28a745', '#ffc107', '#dc3545', 
+        '#6f42c1', '#fd7e14', '#20c997', '#e83e8c', '#17a2b8'
+    ];
+
+    // Chart 1: Main Bar Chart - Subscriptions per Plan
+    if (document.getElementById('planChart')) {
+        const ctx1 = document.getElementById('planChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: planNames,
+                datasets: [{
+                    label: 'Number of Subscriptions',
+                    data: subscriptionCounts,
+                    backgroundColor: colors.slice(0, planNames.length),
+                    borderColor: colors.map(c => c),
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e3b5c',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        callbacks: {
+                            label: function(context) {
+                                return `Subscriptions: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#e9ecef' },
+                        title: { display: true, text: 'Number of Subscriptions' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 2: Comparison Chart (Active vs Total)
+    if (document.getElementById('comparisonChart')) {
+        const ctx2 = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: planNames,
+                datasets: [
+                    {
+                        label: 'Total Subscriptions',
+                        data: subscriptionCounts,
+                        backgroundColor: '#2575c7',
+                        borderRadius: 8
+                    },
+                    {
+                        label: 'Active Subscriptions',
+                        data: activeSubscriptions,
+                        backgroundColor: '#28a745',
+                        borderRadius: 8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { backgroundColor: '#1e3b5c' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Chart 3: Revenue Chart
+    if (document.getElementById('revenueChart')) {
+        const ctx3 = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: planNames,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: revenueData,
+                    backgroundColor: '#ffc107',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Revenue: ₹${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 4: Daily Subscriptions Line Chart
+    if (document.getElementById('dailyChart')) {
+        const ctx4 = document.getElementById('dailyChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: last7Days,
+                datasets: [{
+                    label: 'New Subscriptions',
+                    data: dailySubscriptions,
+                    borderColor: '#1e3b5c',
+                    backgroundColor: 'rgba(30, 59, 92, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#2575c7',
+                    pointBorderColor: '#fff',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    }
+
+    // Export function (CSV export)
+    function exportToExcel() {
+        let csv = "Plan Name,Duration (days),Price (₹),Total Subscriptions,Active Subscriptions,Revenue (₹)\n";
+        
+        {% for item in subscription_stats %}
+        csv += "{{ item.plan.plan_name }},{{ item.plan.plan_duration }},{{ item.plan.plan_amount }},{{ item.total }},{{ item.active }},{{ item.revenue }}\n";
+        {% endfor %}
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'plan_report.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+{% endblock content %}

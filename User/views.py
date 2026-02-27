@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from .models import tbl_subscription, tbl_plan
+
 # new point
 
 # Create your views here.
@@ -560,3 +561,6 @@ def Viewrating(request,mid):
 #     user = tbl_user.objects.get(id=request.session['uid'])
 #     if not check_subscription(user):
 #         return redirect("User:ViewSubscription")
+
+
+
