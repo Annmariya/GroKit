@@ -1,155 +1,432 @@
+{% extends 'Admin/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeliveryBoy View</title>
+    <title>Delivery Boy Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 25px;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 18px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e9edf2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .count-badge {
+            background: #e9eef4;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Table Wrapper */
+        .table-wrapper {
+            padding: 0 20px 20px 20px;
+            overflow-x: auto;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 1200px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 10px;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 10px;
+            color: #1e293b;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fff7e5;
+            color: #b45309;
+        }
+
+        .status-verified {
+            background: #e3f2ed;
+            color: #0d6e4b;
+        }
+
+        .status-rejected {
+            background: #fee9e7;
+            color: #b91c1c;
+        }
+
+        /* Action Buttons */
+        .action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .btn-accept {
+            background: #e3f2ed;
+            color: #0d6e4b;
+        }
+
+        .btn-accept:hover {
+            background: #c6e6db;
+        }
+
+        .btn-reject {
+            background: #fee9e7;
+            color: #b91c1c;
+        }
+
+        .btn-reject:hover {
+            background: #fdd7d3;
+        }
+
+        .btn-verified {
+            background: #e3f2ed;
+            color: #0d6e4b;
+            cursor: default;
+        }
+
+        .btn-rejected {
+            background: #fee9e7;
+            color: #b91c1c;
+            cursor: default;
+        }
+
+        /* Images */
+        .user-image {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* User Info */
+        .user-name {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .user-contact {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* Empty State */
+        .empty-message {
+            text-align: center;
+            padding: 30px !important;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .section-header {
+                padding: 15px;
+            }
+            
+            .table-wrapper {
+                padding: 0 15px 15px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <center>
-    <form action="" method="post">
-        {% csrf_token %}
-        <h1>Delivery View</h1>
-        <table border="2">
-            <tr>
-                <td>SL.NO</td>
-                <td>Name</td>
-                <td>Gender</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Doj</td>
-                <td>Address</td>
-                <td>District</td>
-                <td>Place</td>
-                <td>Photo</td>
-                <td>Proof</td>
-                <td colspan="2">Action</td>
-            </tr>
-            {% for i in deliverydata %}
-            <tr>
-                <td>{{ forloop.counter}}</td>
-                <td>{{i.delivery_name}}</td>
-                <td>{{i.delivery_gender}}</td>
-                <td>{{i.delivery_email}}</td>
-                <td>{{i.delivery_contact}}</td>
-                <td>{{i.delivery_doj}}</td>
-                <td>{{i.delivery_address}}</td>
-                <td>{{i.delivery_place.district.district_name}}</td>
-                <td>{{i.delivery_place.place_name}}</td>
-                <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
-                <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
-                <td>
-                    {% if i.delivery_status == 0 %}
-                    <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
-                    <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
-                    {% elif i.delivery_status == 1 %}
-                    Verified
-                    {% elif i.delivery_status == 2 %}
-                    Rejected
-                    {% endif %}
-                
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+    <div class="container">
+        <h1 class="page-title">Delivery Boy Management</h1>
 
-        <br>
-        <h1> Verified Delivery List</h1>
-        <table border="2">
-            <tr>
-                <td>SL.NO</td>
-                <td>Name</td>
-                <td>Gender</td>
-                <td>Email</td>
-                <td>Contact</td>
-                <td>Doj</td>
-                <td>Address</td>
-                <td>District</td>
-                <td>Place</td>
-                <td>Photo</td>
-                <td>Proof</td>
-                <td colspan="2">Action</td>
-            </tr>
-            {% for i in accdeliverydata %}
-            <tr>
-                <td>{{ forloop.counter}}</td>
-                <td>{{i.delivery_name}}</td>
-                <td>{{i.delivery_gender}}</td>
-                <td>{{i.delivery_email}}</td>
-                <td>{{i.delivery_contact}}</td>
-                <td>{{i.delivery_doj}}</td>
-                <td>{{i.delivery_address}}</td>
-                <td>{{i.delivery_place.district.district_name}}</td>
-                <td>{{i.delivery_place.place_name}}</td>
-                <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
-                <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
-                <td>
-                    {% if i.delivery_status == 0 %}
-                    <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
-                    <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
-                {% elif i.delivery_status == 1 %}
-                Verified
-                    {% elif i.delivery_status == 2 %}
-                    Rejected
-                    {% endif %}
-                
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-      <br>
+        <!-- Pending Delivery Boys Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Pending Verification</h2>
+                <span class="count-badge">{{ deliverydata|length }} pending</span>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>DOJ</th>
+                            <th>Address</th>
+                            <th>District</th>
+                            <th>Place</th>
+                            <th>Photo</th>
+                            <th>Proof</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in deliverydata %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="user-name">{{ i.delivery_name }}</div>
+                                <div class="user-contact">ID: DB{{ i.id }}</div>
+                            </td>
+                            <td>{{ i.delivery_gender }}</td>
+                            <td>{{ i.delivery_email }}</td>
+                            <td>{{ i.delivery_contact }}</td>
+                            <td>{{ i.delivery_doj|date:"d M Y" }}</td>
+                            <td>{{ i.delivery_address|truncatechars:30 }}</td>
+                            <td>{{ i.delivery_place.district.district_name }}</td>
+                            <td>{{ i.delivery_place.place_name }}</td>
+                            <td>
+                                {% if i.delivery_photo %}
+                                <img src="{{ i.delivery_photo.url }}" class="user-image" alt="Photo">
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if i.delivery_proof %}
+                                <img src="{{ i.delivery_proof.url }}" class="user-image" alt="Proof">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-group">
+                                    <a href="{% url 'Admin:acceptdelivery' i.id %}" class="btn btn-accept">Accept</a>
+                                    <a href="{% url 'Admin:rejectdelivery' i.id %}" class="btn btn-reject">Reject</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12" class="empty-message">No pending delivery boy registrations</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-      <h1> Rejected Delivery List</h1>
-      <table border="2">
-          <tr>
-              <td>SL.NO</td>
-              <td>Name</td>
-              <td>Gender</td>
-              <td>Email</td>
-              <td>Contact</td>
-              <td>Doj</td>
-              <td>Address</td>
-              <td>District</td>
-              <td>Place</td>
-              <td>Photo</td>
-              <td>Proof</td>
-              <td colspan="2">Action</td>
-          </tr>
-          {% for i in rejdeliverydata %}
-          <tr>
-              <td>{{ forloop.counter}}</td>
-              <td>{{i.delivery_name}}</td>
-              <td>{{i.delivery_gender}}</td>
-              <td>{{i.delivery_email}}</td>
-              <td>{{i.delivery_contact}}</td>
-              <td>{{i.delivery_doj}}</td>
-              <td>{{i.delivery_address}}</td>
-              <td>{{i.delivery_place.district.district_name}}</td>
-              <td>{{i.delivery_place.place_name}}</td>
-              <td><img src="{{i.delivery_photo.url}}" width="50" height="50"></td>
-              <td><img src="{{i.delivery_proof.url}}" width="50" height="50"></td>
-              <td>
-                  {% if i.delivery_status == 0 %}
-                  <a href="{% url 'Admin:acceptdelivery' i.id %}">Accept</a>
-                  <a href="{% url 'Admin:rejectdelivery' i.id %}">Reject</a>
-              {% elif i.delivery_status == 1 %}
-              Verified
-                  {% elif i.delivery_status == 2 %}
-                  Rejected
-                  {% endif %}
-              
-              </td>
-          </tr>
-          {% endfor %}
-      </table>
-    </form>
-    </center>
+        <!-- Verified Delivery Boys Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Verified Applications</h2>
+                <span class="count-badge">{{ accdeliverydata|length }} verified</span>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>DOJ</th>
+                            <th>Address</th>
+                            <th>District</th>
+                            <th>Place</th>
+                            <th>Photo</th>
+                            <th>Proof</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in accdeliverydata %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="user-name">{{ i.delivery_name }}</div>
+                                <div class="user-contact">ID: DB{{ i.id }}</div>
+                            </td>
+                            <td>{{ i.delivery_gender }}</td>
+                            <td>{{ i.delivery_email }}</td>
+                            <td>{{ i.delivery_contact }}</td>
+                            <td>{{ i.delivery_doj|date:"d M Y" }}</td>
+                            <td>{{ i.delivery_address|truncatechars:30 }}</td>
+                            <td>{{ i.delivery_place.district.district_name }}</td>
+                            <td>{{ i.delivery_place.place_name }}</td>
+                            <td>
+                                {% if i.delivery_photo %}
+                                <img src="{{ i.delivery_photo.url }}" class="user-image" alt="Photo">
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if i.delivery_proof %}
+                                <img src="{{ i.delivery_proof.url }}" class="user-image" alt="Proof">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-badge status-verified">Verified</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12" class="empty-message">No verified delivery boys yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rejected Delivery Boys Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Rejected Applications</h2>
+                <span class="count-badge">{{ rejdeliverydata|length }} rejected</span>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>DOJ</th>
+                            <th>Address</th>
+                            <th>District</th>
+                            <th>Place</th>
+                            <th>Photo</th>
+                            <th>Proof</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in rejdeliverydata %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="user-name">{{ i.delivery_name }}</div>
+                                <div class="user-contact">ID: DB{{ i.id }}</div>
+                            </td>
+                            <td>{{ i.delivery_gender }}</td>
+                            <td>{{ i.delivery_email }}</td>
+                            <td>{{ i.delivery_contact }}</td>
+                            <td>{{ i.delivery_doj|date:"d M Y" }}</td>
+                            <td>{{ i.delivery_address|truncatechars:30 }}</td>
+                            <td>{{ i.delivery_place.district.district_name }}</td>
+                            <td>{{ i.delivery_place.place_name }}</td>
+                            <td>
+                                {% if i.delivery_photo %}
+                                <img src="{{ i.delivery_photo.url }}" class="user-image" alt="Photo">
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if i.delivery_proof %}
+                                <img src="{{ i.delivery_proof.url }}" class="user-image" alt="Proof">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-badge status-rejected">Rejected</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12" class="empty-message">No rejected applications</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if msg %}
+    <script>
+        alert("{{msg}}")
+        window.location = "{% url 'Admin:Deliveryboyview' %}"
+    </script>
+    {% endif %}
 </body>
 </html>
-{% if msg %}
-<script>
-    alert("{{msg}}")
-    window.location="{% url 'Admin:Deliveryboyview' %}"
-</script>
-{% endif %}
+{% endblock content %}

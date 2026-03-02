@@ -372,14 +372,117 @@
         <hr>
 
         <!-- inline message + redirect (exactly as original, but with smooth style) -->
+
         {% if msg %}
+<style>
+/* Overlay */
+.success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Popup Card */
+.success-popup {
+    background: #ffffff;
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: popupScale 0.3s ease forwards;
+}
+
+/* Icon */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #e7f9ef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    animation: bounce 1s infinite;
+}
+
+.success-icon svg {
+    width: 40px;
+    height: 40px;
+    color: #28a745;
+}
+
+/* Button */
+.success-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.success-btn:hover {
+    background: #218838;
+}
+
+/* Animations */
+@keyframes popupScale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+</style>
+
+<div id="successPopup" class="success-overlay">
+    <div class="success-popup">
+        <div class="success-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 style="color:#333;">Success!</h2>
+        <p style="color:#666; margin-top:8px;">{{ msg }}</p>
+        <button class="success-btn" onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+function closePopup() {
+    window.location.href = "{% url 'Seller:Stock' pid %}";
+}
+</script>
+{% endif %}
+
+
+
+        <!-- {% if msg %}
         <script>
             (function() {
                 alert("{{ msg|escapejs }}");
                 window.location.href = "{% url 'Seller:Stock' pid %}";
             })();
         </script>
-        {% endif %}
+        {% endif %} -->
 
         <!-- footnote / seller hint (non-intrusive) -->
         <div style="font-size: 0.8rem; color: #7e99b3; text-align: right; margin-top: 0.3rem;">

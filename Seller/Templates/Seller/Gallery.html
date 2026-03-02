@@ -531,7 +531,7 @@
                            accept="image/*"
                            onchange="this.form.submit()">
                     <button type="button" class="browse-btn" onclick="document.getElementById('fileInput').click()">
-                        Choose File
+                        uplod File
                     </button>
                 </div>
             </div>
@@ -596,19 +596,102 @@
 
     <!-- Message Alert Script -->
     {% if msg %}
+    <style>
+    /* Overlay */
+    .success-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+    
+    /* Popup Card */
+    .success-popup {
+        background: #ffffff;
+        width: 320px;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        animation: popupScale 0.3s ease forwards;
+    }
+    
+    /* Icon */
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: #e7f9ef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        animation: bounce 1s infinite;
+    }
+    
+    .success-icon svg {
+        width: 40px;
+        height: 40px;
+        color: #28a745;
+    }
+    
+    /* Button */
+    .success-btn {
+        margin-top: 20px;
+        padding: 10px 25px;
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+    
+    .success-btn:hover {
+        background: #218838;
+    }
+    
+    /* Animations */
+    @keyframes popupScale {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes bounce {
+        0%,100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+    </style>
+    
+    <div id="successPopup" class="success-overlay">
+        <div class="success-popup">
+            <div class="success-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 style="color:#333;">Success!</h2>
+            <p style="color:#666; margin-top:8px;">{{ msg }}</p>
+            <button class="success-btn" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+    
     <script>
-        (function() {
-            // Show toast notification
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = "{{msg|escapejs}}";
-            toast.classList.add('show');
-            
-            // Redirect after delay
-            setTimeout(function() {
-                window.location = "{% url 'Seller:Gallery' pid %}";
-            }, 1500);
-        })();
+    function closePopup() {
+        window.location.href = "{% url 'Seller:Gallery' pid %}";
+    }
     </script>
     {% endif %}
 
@@ -683,6 +766,110 @@
             }
         }, 3000);
     </script>
+
+<!-- DElete message -->
+{% if msgDelete %}
+
+<style>
+/* Overlay */
+.delete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Popup Card */
+.delete-popup {
+    background: #ffffff;
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    animation: popupScale 0.3s ease forwards;
+}
+
+/* Icon */
+.delete-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff4d4d, #ff944d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    animation: pulse 1s infinite;
+}
+
+.delete-icon svg {
+    width: 40px;
+    height: 40px;
+    color: #fff;
+}
+
+/* Button */
+.delete-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #ff4d4d, #ff944d);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-btn:hover {
+    opacity: 0.9;
+}
+
+/* Animations */
+@keyframes popupScale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+</style>
+
+<div class="delete-overlay">
+    <div class="delete-popup">
+        <div class="delete-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7L5 17M5 7l14 10"></path>
+            </svg>
+        </div>
+        <h2 style="color:#333;">Deleted!</h2>
+        <p style="color:#666; margin-top:8px;">{{ msgDelete }}</p>
+        <button class="delete-btn" onclick="closeDeletePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+function closeDeletePopup() {
+    window.location.href = "{% url 'Seller:Gallery' pid %}";
+}
+</script>
+{% endif %}
+
 </body>
 </html>
 <br><br>

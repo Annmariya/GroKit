@@ -95,7 +95,8 @@ def Ajaxproduct(request):
 
 def delproduct(request,pid):
         tbl_product.objects.get(id=pid).delete()
-        return redirect("Seller:Product")
+        return render(request,"Seller/Product.html",{'msg':"Data Deleted"})
+        # return redirect("Seller:Product")
 
 
 def Stock(request,pid):
@@ -130,7 +131,8 @@ def Gallery(request,pid):
 
 def delegallery(request,gid,pid):
         tbl_gallery.objects.get(id=gid).delete()
-        return redirect("Seller:Gallery",pid)
+        return render(request,"Seller/Gallery.html",{'msgDelete':"Data Deleted Successfully",'pid':pid})
+        # return redirect("Seller:Gallery",pid)
 
 # def ViewBookings(request):
 #     if 'sid' not in request.session:

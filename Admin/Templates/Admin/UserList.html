@@ -3,267 +3,783 @@
 {% block content %}
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 * {
-    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Page Wrapper */
-.admin-wrapper {
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: auto;
+/* Page Container */
+.page-container {
+    max-width: 1300px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
-/* Card */
-.admin-card {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    margin-bottom: 40px;
+/* Header */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-/* Title */
-.admin-title {
-    font-size: 22px;
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-title i {
+    font-size: 28px;
+    color: #4361ee;
+    background: #e9ecfb;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.header-title h1 {
+    font-size: 24px;
     font-weight: 600;
-    color: #4b2aad;
-    margin-bottom: 20px;
+    color: #1e293b;
 }
 
-/* Table */
-.table-wrapper {
+.header-title h1 span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #64748b;
+    margin-left: 10px;
+}
+
+/* Stats Cards */
+.stats-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background: white;
+    border: 1px solid #e9edf2;
+    border-radius: 12px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.stat-box .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #4361ee;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.stat-box .info h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.stat-box .info p {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Search Bar */
+.search-bar {
+    background: white;
+    border: 1px solid #e9edf2;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.search-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-input i {
+    color: #94a3b8;
+    font-size: 18px;
+}
+
+.search-input input {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 2px solid #e9edf2;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.search-input input:focus {
+    border-bottom-color: #4361ee;
+}
+
+/* View Toggle */
+.view-toggle {
+    display: flex;
+    gap: 8px;
+    background: #f8fafc;
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.toggle-btn.active {
+    background: white;
+    color: #4361ee;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.toggle-btn:hover:not(.active) {
+    background: #e9edf2;
+}
+
+/* Main Card */
+.main-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #e9edf2;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 18px 25px;
+    background: #fafbff;
+    border-bottom: 1px solid #e9edf2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-header h2 i {
+    color: #4361ee;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    background: white;
+    border: 1px solid #e9edf2;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.action-button:hover {
+    background: #f8fafc;
+    border-color: #4361ee;
+    color: #4361ee;
+}
+
+/* Table Container */
+.table-container {
+    padding: 0 25px 25px 25px;
     overflow-x: auto;
 }
 
-.admin-table {
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    font-size: 14px;
 }
 
-.admin-table th,
-.admin-table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
+.data-table th {
+    text-align: left;
+    padding: 16px 10px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e9edf2;
+}
+
+.data-table td {
+    padding: 16px 10px;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
 }
 
-.admin-table th {
-    color: #4b2aad;
-    font-weight: 600;
+.data-table tr:last-child td {
+    border-bottom: none;
 }
 
-.admin-table img {
-    width: 50px;
-    height: 50px;
+.data-table tbody tr:hover {
+    background: #fafbff;
+}
+
+/* User Profile */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
     object-fit: cover;
-    border-radius: 8px;
+    border: 2px solid #e9edf2;
 }
 
-/* Action Buttons */
-.action-btn {
-    text-decoration: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
+.user-info {
+    line-height: 1.4;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.user-id {
+    font-size: 10px;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 20px;
     display: inline-block;
-    margin: 2px;
-    transition: 0.3s;
+    margin-top: 2px;
 }
 
-.accept-btn {
-    background: #d4edda;
-    color: #155724;
-}
-
-.reject-btn {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.status-badge {
+/* Gender Badge */
+.gender-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 4px 10px;
-    border-radius: 6px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 500;
-    color: #fff;
+}
+
+.gender-male {
+    background: #e6f0ff;
+    color: #2563eb;
+}
+
+.gender-female {
+    background: #fbe9f0;
+    color: #db2777;
+}
+
+.gender-other {
+    background: #e9e9e9;
+    color: #4b5563;
+}
+
+/* Contact Info */
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.contact-phone {
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.contact-phone i {
+    font-size: 11px;
+    color: #4361ee;
+}
+
+.contact-email {
+    font-size: 11px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.contact-email i {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+/* Location */
+.location-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.location-place {
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.location-place i {
+    font-size: 11px;
+    color: #ef4444;
+}
+
+.location-district {
+    font-size: 11px;
+    color: #64748b;
+    margin-left: 18px;
+}
+
+/* Address Cell */
+.address-text {
+    max-width: 200px;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.address-text i {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+/* Photo Cell */
+.photo-cell {
+    position: relative;
     display: inline-block;
 }
 
-.status-verified {
-    background: #28a745;
+.photo-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #4361ee;
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    opacity: 0;
+    transition: 0.2s;
+    cursor: pointer;
 }
 
-.status-rejected {
-    background: #dc3545;
+.photo-cell:hover .photo-overlay {
+    opacity: 1;
+}
+
+/* Empty State */
+.empty-row td {
+    text-align: center;
+    padding: 50px !important;
+    color: #94a3b8;
+}
+
+.empty-state-content {
+    text-align: center;
+}
+
+.empty-state-content i {
+    font-size: 48px;
+    color: #e2e8f0;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.empty-state-content p {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #64748b;
+}
+
+.empty-state-content small {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Table Footer */
+.table-footer {
+    padding: 15px 25px 20px;
+    border-top: 1px solid #e9edf2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #64748b;
+    background: #fafbff;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .admin-table th, .admin-table td {
+    .page-container {
+        padding: 15px;
+    }
+    
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .stats-row {
+        width: 100%;
+    }
+    
+    .stat-box {
+        flex: 1;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-input {
+        max-width: 100%;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .table-container {
+        padding: 0 15px 15px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 12px 8px;
         font-size: 12px;
-        padding: 8px;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
     }
 }
 </style>
 
-<div class="admin-wrapper">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- All Users -->
-    <div class="admin-card">
-        <div class="admin-title">User List</div>
-        <div class="table-wrapper">
-            <table class="admin-table">
+<div class="page-container">
+    <!-- Header -->
+    <div class="header-section">
+        <div class="header-title">
+            <i class="fas fa-users"></i>
+            <h1>
+                User Directory 
+                <span>Registered Members</span>
+            </h1>
+        </div>
+        <!-- <div class="stats-row">
+            <div class="stat-box">
+                <div class="icon"><i class="fas fa-user-plus"></i></div>
+                <div class="info">
+                    <h3>{{ userdata|length }}</h3>
+                    <p>Total Users</p>
+                </div>
+            </div> -->
+            <!-- <div class="stat-box">
+                <div class="icon" style="background: #10b981;"><i class="fas fa-user-check"></i></div>
+                <div class="info">
+                    <h3>
+                        {% with active=0 %}
+                            {% for i in userdata %}
+                                {% if i.user_status == 1 %}
+                                    {% cycle '1' as active%}
+                                {% endif %}
+                            {% endfor %}
+                            {{ active }}
+                        {% endwith %}
+                    </h3>
+                    <p>Active</p>
+                </div>
+            </div>
+        </div> --->
+    </div>
+
+    <!-- Search Bar
+    <div class="search-bar">
+        <div class="search-input">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search by name, email or contact...">
+        </div>
+        <div class="view-toggle">
+            <button class="toggle-btn active" onclick="changeView('grid')">
+                <i class="fas fa-table"></i> Table
+            </button>
+            <button class="toggle-btn" onclick="changeView('list')">
+                <i class="fas fa-list"></i> Compact
+            </button>
+        </div>
+    </div> -->
+
+    <!-- Main Card -->
+    <div class="main-card">
+        <div class="card-header">
+            <h2>
+                <i class="fas fa-list-ul"></i>
+                Registered Users
+            </h2>
+            <!-- <div class="header-actions">
+                <button class="action-button" onclick="exportToExcel()">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <button class="action-button" onclick="refreshPage()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div> -->
+        </div>
+
+        <div class="table-container">
+            <table class="data-table" id="userTable">
                 <thead>
                     <tr>
-                        <th>SL.NO</th>
-                        <th>Name</th>
+                        <th>#</th>
+                        <th>User</th>
                         <th>Gender</th>
                         <th>Contact</th>
-                        <th>Email</th>
-                        <th>Place</th>
-                        <th>Photo</th>
+                        <th>Location</th>
                         <th>Address</th>
-                        <th>Action</th>
+                        <th>Photo</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for i in userdata %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ i.user_name }}</td>
-                        <td>{{ i.user_gender }}</td>
-                        <td>{{ i.user_contact }}</td>
-                        <td>{{ i.user_email }}</td>
-                        <td>{{ i.user_place.place_name }}</td>
-                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
-                        <td>{{ i.user_address }}</td>
                         <td>
-                            {% if i.user_status == 0 %}
-                                <a href="{% url 'Admin:acceptuser' i.id %}" class="action-btn accept-btn">Accept</a>
-                                <a href="{% url 'Admin:rejectuser' i.id %}" class="action-btn reject-btn">Reject</a>
-                            {% elif i.user_status == 1 %}
-                                <span class="status-badge status-verified">Verified</span>
-                            {% elif i.user_status == 2 %}
-                                <span class="status-badge status-rejected">Rejected</span>
+                            <span style="font-weight: 600; color: #d314d6; background: #e9ecfb; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                                #{{ forloop.counter }}
+                            </span>
+                        </td>
+                        <td>
+                            
+                                <div class="user-info">
+                                    <div class="user-name">{{ i.user_name }}</div>
+                                    <div class="user-id">ID: USR00{{ i.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if i.user_gender == 'Male' %}
+                            <span class="gender-badge gender-male">
+                                <i class="fas fa-mars"></i> Male
+                            </span>
+                            {% elif i.user_gender == 'Female' %}
+                            <span class="gender-badge gender-female">
+                                <i class="fas fa-venus"></i> Female
+                            </span>
+                            {% else %}
+                            <span class="gender-badge gender-other">
+                                <i class="fas fa-genderless"></i> {{ i.user_gender }}
+                            </span>
                             {% endif %}
                         </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="9">No users found</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Verified Users -->
-    <div class="admin-card">
-        <div class="admin-title">Verified Users</div>
-        <div class="table-wrapper">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>SL.NO</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Place</th>
-                        <th>Photo</th>
-                        <th>Address</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in accuserdata %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ i.user_name }}</td>
-                        <td>{{ i.user_gender }}</td>
-                        <td>{{ i.user_contact }}</td>
-                        <td>{{ i.user_email }}</td>
-                        <td>{{ i.user_place.place_name }}</td>
-                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
-                        <td>{{ i.user_address }}</td>
                         <td>
-                            <span class="status-badge status-verified">Verified</span>
+                            <div class="contact-details">
+                                <span class="contact-phone">
+                                    <i class="fas fa-phone-alt"></i>
+                                    {{ i.user_contact }}
+                                </span>
+                                <span class="contact-email">
+                                    <i class="fas fa-envelope"></i>
+                                    {{ i.user_email|truncatechars:18 }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-details">
+                                <span class="location-place">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ i.user_place.place_name }}
+                                </span>
+                                <span class="location-district">
+                                    <i class="fas fa-building"></i>
+                                    {{ i.user_place.district.district_name }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="address-text" title="{{ i.user_address }}">
+                                <i class="fas fa-home"></i>
+                                {{ i.user_address|truncatechars:30 }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="photo-cell">
+                                {% if i.user_photo %}
+                                <img src="{{ i.user_photo.url }}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div class="photo-overlay" onclick="viewPhoto('{{ i.user_photo.url }}')">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                {% else %}
+                                <span style="color: #94a3b8;">No photo</span>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="9">No verified users found</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Rejected Users -->
-    <div class="admin-card">
-        <div class="admin-title">Rejected Users</div>
-        <div class="table-wrapper">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>SL.NO</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Place</th>
-                        <th>Photo</th>
-                        <th>Address</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in rejuserdata %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ i.user_name }}</td>
-                        <td>{{ i.user_gender }}</td>
-                        <td>{{ i.user_contact }}</td>
-                        <td>{{ i.user_email }}</td>
-                        <td>{{ i.user_place.place_name }}</td>
-                        <td><img src="{{ i.user_photo.url }}" alt="User Photo"></td>
-                        <td>{{ i.user_address }}</td>
-                        <td>
-                            <span class="status-badge status-rejected">Rejected</span>
+                    <tr class="empty-row">
+                        <td colspan="7">
+                            <div class="empty-state-content">
+                                <i class="fas fa-users-slash"></i>
+                                <p>No users found</p>
+                                <small>New users will appear here after registration</small>
+                            </div>
                         </td>
                     </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="9">No rejected users found</td>
-                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <!-- Table Footer -->
+        <div class="table-footer">
+            <div>
+                <i class="fas fa-database" style="margin-right: 6px;"></i>
+                Showing {{ userdata|length }} record{% if userdata|length != 1 %}s{% endif %}
+            </div>
+            <div>
+                <i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>
+                Last updated: {% now "d M Y, h:i A" %}
+            </div>
+        </div>
+    </div>
 </div>
 
-{% if msg %}
 <script>
-    alert("{{ msg }}");
-    window.location = "{% url 'Admin:UserList' %}";
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const input = this.value.toLowerCase();
+    const table = document.getElementById('userTable');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (row.classList.contains('empty-row')) continue;
+        
+        const name = row.cells[1]?.innerText.toLowerCase() || '';
+        const email = row.cells[3]?.innerText.toLowerCase() || '';
+        const contact = row.cells[3]?.innerText.toLowerCase() || '';
+        
+        if (name.includes(input) || email.includes(input) || contact.includes(input)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+
+// Export to CSV
+// function exportToExcel() {
+//     let csv = "SL.NO,Name,Gender,Contact,Email,Place,District,Address\n";
+    
+//     {% for i in userdata %}
+//     csv += "{{ forloop.counter }},{{ i.user_name }},{{ i.user_gender }},{{ i.user_contact }},{{ i.user_email }},{{ i.user_place.place_name }},{{ i.user_place.district.district_name }},{{ i.user_address }}\n";
+//     {% endfor %}
+    
+//     const blob = new Blob([csv], { type: 'text/csv' });
+//     const url = window.URL.createObjectURL(blob);
+//     const a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'user_list.csv';
+//     document.body.appendChild(a);
+//     a.click();
+//     document.body.removeChild(a);
+//     window.URL.revokeObjectURL(url);
+// }
+
+// Refresh page
+function refreshPage() {
+    location.reload();
+}
+
+// View photo
+function viewPhoto(url) {
+    window.open(url, '_blank');
+}
+
+// Change view (placeholder)
+function changeView(view) {
+    const buttons = document.querySelectorAll('.toggle-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if (view === 'grid') {
+        // Table view is default
+    } else {
+        // Compact view could be implemented
+    }
+}
 </script>
-{% endif %}
 
 {% endblock %}
-
-
-<!-- 
-<script>
-    alert("{{msg}}")
-    window.location="{% url 'Admin:UserList' %}"
-</script> -->

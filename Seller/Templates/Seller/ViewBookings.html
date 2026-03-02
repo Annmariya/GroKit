@@ -1,131 +1,443 @@
+{% extends 'Seller/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br>
 {% load mathfilters %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller - View Bookings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background:white;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #2d9a72;
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .filter-panel {
+            background: #bcc3c3;
+            padding: 1.2rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid #e9eef2;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-group label {
+            color: #475569;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input {
+            border: none;
+            background: transparent;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #1e293b;
+            outline: none;
+        }
+
+        .btn-filter {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-filter:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            background: white;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .order-block {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border: 1px solid #edf2f7;
+        }
+
+        .order-block-header {
+            background: #ffffff;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-badge {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .order-id {
+            background: #f1f4f9;
+            color: #1e293b;
+            font-weight: 700;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+        }
+
+        .order-date {
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .order-customer {
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .order-amount {
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: #bcc3c3;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .product-info h4 {
+            color: #1e293b;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+
+        .product-info p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .product-info .price {
+            color: #0f172a;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .qty-badge {
+            background: #f1f5f9;
+            color: #334155;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .item-total {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 1rem;
+        }
+
+        .action-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status-link {
+            text-decoration: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .status-link.pack {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-link.pack:hover {
+            background: #fde68a;
+        }
+
+        .status-link.ship {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-link.ship:hover {
+            background: #bfdbfe;
+        }
+
+        .status-tag {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-tag.green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-tag.blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-tag.yellow {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-tag.gray {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .empty-message {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 1rem;
+            border: 2px dashed #cbd5e1;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            th { display: none; }
+            td { display: block; }
+            .product-cell { flex-wrap: wrap; }
+        }
+    </style>
 </head>
 
 <body>
-    <h1><center>Seller - View Bookings</center></h1>
-    <br><br>
 
-    <form method="get" style="margin-bottom:20px;">
-        <label><strong>From:</strong></label>
-        <input type="date" name="from_date" value="{{ from_date }}">
-    
-        <label style="margin-left:10px;"><strong>To:</strong></label>
-        <input type="date" name="to_date" value="{{ to_date }}">
-    
-        <input type="submit" value="Filter">
-    
-        <a href="{% url 'Seller:ViewBookings' %}">
-            <button type="button">Reset</button>
-        </a>
-    </form>
+    <h1><i> <b>👤 Seller View Bookings</b></i></h1>
 
-
-
-
-    <table border="1" cellpadding="10" width="100%">
-        {% for b in bookings %}
-
-        <tr style="background:#e8f0ff">
-            <td colspan="6">
-                <strong>Order #:</strong> {{ b.id }} <br>
-                <strong>Date:</strong> {{ b.booking_date }} <br>
-                <strong>Total Order Amount:</strong> ₹{{ b.booking_amount }} <br>
-                <strong>Customer:</strong> {{ b.user.user_name }}
-                <br><br>
-                
-                <!-- {% if b.deliveryboy_id %}
-                <strong>Delivery Boy:</strong> {{ b.deliveryboy.delivery_name }}
-            {% else %}
-            <a href=""
-            style="padding:6px 12px; background:#198754; color:white; text-decoration:none; border-radius:4px;">
-            🛵 Assign Delivery Boy
-         </a>
-            {% endif %} -->
-            </td>
-        </tr>
-
-        <tr>
-            <th>SNO</th>
-            <th>Photo</th>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Amount</th>
-            <th>Action</th>
-        </tr>
-
-        {% for c in b.tbl_cart_set.all %}
-        {% if c.product.seller_id == request.session.sid %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>
-                <img src="{{ c.product.product_photo.url }}" width="100">
-            </td>
-            <td>
-                <strong>{{ c.product.product_name }}</strong><br>
-                {{ c.product.product_description }}<br>
-                ₹{{ c.product.product_price }}
-            </td>
-            <td>{{ c.cart_quantity }}</td>
-            <td>
-                ₹{{ c.cart_quantity|mul:c.product.product_price }}
-            </td>
+    <div class="filter-panel">
+        <form method="get" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; width: 100%;">
+            <div class="filter-group">
+                <label>From</label>
+                <input type="date" name="from_date" value="{{ from_date }}">
+            </div>
             
-            <td>
-                {% if c.cart_status == 2 %}
-                <a href="{% url 'Seller:UpdateCartStatus' c.id 3 %}">
-                    📦 Mark as Packed
-                </a>
+            <div class="filter-group">
+                <label>To</label>
+                <input type="date" name="to_date" value="{{ to_date }}">
+            </div>
+            
+            <button type="submit" class="btn-filter">Filter</button>
+            
+            <a href="{% url 'Seller:ViewBookings' %}" class="btn-reset">Reset</a>
+        </form>
+    </div>
 
-                {% elif c.cart_status == 3 %}
-                <a href="{% url 'Seller:UpdateCartStatus' c.id 4 %}">
-                    🚚 Mark as Shipped
-                </a>
-                {% elif c.cart_status == 4 %}
-                    ✅ Item Collected
-                </a>
+    <div class="orders-list">
+        {% for b in bookings %}
+        <div class="order-block">
+            <div class="order-block-header">
+                <div class="order-badge">
+                    <span class="order-id">#{{ b.id }}</span>
+                    <span class="order-date">📅 {{ b.booking_date }}</span>
+                    <span class="order-customer">👤 {{ b.user.user_name }}</span>
+                </div>
+                <div class="order-amount">₹{{ b.booking_amount }}</div>
+            </div>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in b.tbl_cart_set.all %}
+                    {% if c.product.seller_id == request.session.sid %}
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="{{ c.product.product_photo.url }}" class="product-thumb">
+                                <div class="product-info">
+                                    <h4>{{ c.product.product_name }}</h4>
+                                    <p>{{ c.product.product_description|truncatechars:50 }}</p>
+                                    <span class="price">₹{{ c.product.product_price }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="qty-badge">{{ c.cart_quantity }}</span>
+                        </td>
+                        <td>
+                            <span class="item-total">₹{{ c.cart_quantity|mul:c.product.product_price }}</span>
+                        </td>
+                        <td>
+                            <div class="action-wrapper">
+                                {% if c.cart_status == 2 %}
+                                <a href="{% url 'Seller:UpdateCartStatus' c.id 3 %}" class="status-link pack">
+                                    📦 Mark Packed
+                                </a>
 
-                {% elif c.cart_status == 5 %}
-                
-                    📍 Mark as Out for Delivery
-              
+                                {% elif c.cart_status == 3 %}
+                                <a href="{% url 'Seller:UpdateCartStatus' c.id 4 %}" class="status-link ship">
+                                    🚚 Mark Shipped
+                                </a>
 
-                {% elif c.cart_status == 6 %}
-               
-                    ✅ Mark as Delivered
-                </a>
+                                {% elif c.cart_status == 4 %}
+                                <span class="status-tag blue">✅ Item Collected</span>
 
-                {% elif c.cart_status == 7 %}
-                <span style="color:green; font-weight:bold;">
-                    🎉 Delivered Successfully
-                </span>
+                                {% elif c.cart_status == 5 %}
+                                <span class="status-tag yellow">📍 Out for Delivery</span>
 
-                {% else %}
-                <span style="color:gray;">
-                    ⏳ Waiting for Payment
-                </span>
-                {% endif %}
-            </td>
+                                {% elif c.cart_status == 6 %}
+                                <span class="status-tag green">✅ Delivered</span>
 
+                                {% elif c.cart_status == 7 %}
+                                <span class="status-tag green">🎉 Delivered</span>
 
-        </tr>
-        {% endif %}
-        {% endfor %}
-
+                                {% else %}
+                                <span class="status-tag gray">⏳ Waiting Payment</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% empty %}
-        <tr>
-            <td colspan="6">No bookings found</td>
-        </tr>
-
+        <div class="empty-message">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+            <p>No bookings found</p>
+        </div>
         {% endfor %}
-    </table>
+    </div>
 
 </body>
 
 </html>
+{% endblock content %}
