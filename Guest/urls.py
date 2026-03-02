@@ -7,7 +7,7 @@ urlpatterns = [
        path('Login/',views.Login,name="Login"),
        path('Newseller/',views.Newseller,name="Newseller"),
        path('Deliveryboy/',views.Deliveryboy,name="Deliveryboy"),
-       path('Index/',views.Index,name="Index"),
+       path('',views.Index,name="Index"),
        path('Viewproduct/',views.Viewproduct,name="Viewproduct"),
        
 
