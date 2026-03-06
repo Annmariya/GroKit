@@ -9,6 +9,8 @@ urlpatterns = [
        path('Deliveryboy/',views.Deliveryboy,name="Deliveryboy"),
        path('',views.Index,name="Index"),
        path('Viewproduct/',views.Viewproduct,name="Viewproduct"),
+       path('aboutus/',views.aboutus,name="aboutus"),
+
        
 
 

@@ -165,7 +165,8 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input type="text" name="txt_reply" placeholder="Enter your reply" required>
+                <input type="text" name="txt_reply" placeholder="Enter your reply"title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter" 
+                pattern="^[A-Z]+[a-zA-Z ]*$"  required>
                 <input type="submit" value="Submit">
             </div>
         </form>

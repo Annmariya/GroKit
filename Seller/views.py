@@ -113,7 +113,9 @@ def Stock(request,pid):
         
 def delestock(request,soid,pid):
         tbl_stock.objects.get(id=soid).delete()
-        return redirect("Seller:Stock",pid)
+        return render(request,"Seller/Stock.html",{'msgDelete':"Data Deleted Successfully",'pid':pid})
+
+        # return redirect("Seller:Stock",pid)
 
 
 def Gallery(request,pid):

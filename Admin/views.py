@@ -54,10 +54,17 @@ def AdminRegistration(request):
                
 def deldistrict(request,did):
         tbl_district.objects.get(id=did).delete()
-        return redirect("Admin:District")
+        return render(request,"Admin/District.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:District")
+
 def delcategory(request,cid):
         tbl_category.objects.get(id=cid).delete()
-        return redirect("Admin:Category")
+        return render(request,"Admin/Category.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Category")
+
+
 def deladminregistration(request,rid):
         tbl_adminreg.objects.get(id=rid).delete()
         return redirect("Admin:AdminRegistration")
@@ -69,7 +76,8 @@ def editdistrict(request,did):
                 district=request.POST.get("txt_district")
                 editdata.district_name=district
                 editdata.save()
-                return redirect("Admin:District")
+                return render(request,"Admin/District.html",{'msg':"Data Updated!..."})
+                # return redirect("Admin:District")
         else:
                 return render(request,"Admin/District.html",{'editdata':editdata})
         
@@ -80,7 +88,8 @@ def editcategory(request,cid):
                 category=request.POST.get("txt_category")
                 editdata.category_name=category
                 editdata.save()
-                return redirect("Admin:Category")
+                return render(request,"Admin/Category.html",{'msg':"Data Updated!..."})
+                # return redirect("Admin:Category")
         else:
                 return render(request,"Admin/Category.html",{'editdata':editdata})
 
@@ -115,7 +124,9 @@ def Place(request):
 
 def delplace(request,pid):
         tbl_place.objects.get(id=pid).delete()
-        return redirect("Admin:Place")
+        return render(request,"Admin/Place.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Place")
 
 
 def editplace(request,pid):
@@ -127,7 +138,9 @@ def editplace(request,pid):
                 editdata.place_name=place
                 editdata.district=district
                 editdata.save()
-                return redirect("Admin:Place")
+                return render(request,"Admin/Place.html",{'msg':"Data Updated!..."})
+
+                # return redirect("Admin:Place")
         else:
                 return render(request,"Admin/Place.html",{'editdata':editdata,'districtdata':districtdata})
 
@@ -307,7 +320,9 @@ def Brand(request):
 
 def delebrand(request,bid):
         tbl_brand.objects.get(id=bid).delete()
-        return redirect("Admin:Brand")
+        return render(request,"Admin/Brand.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Brand")
 
 def Deliveryboyview(request):
     deliverydata=tbl_deliveryboy.objects.all()
@@ -342,7 +357,9 @@ def Subcategory(request):
         
 def delsubcategory(request,subid):
         tbl_subcategory.objects.get(id=subid).delete()
-        return redirect("Admin:Subcategory")
+        return render(request,"Admin/Subcategory.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Subcategory")
 
 
 def Mealtype(request):
@@ -359,7 +376,9 @@ def Mealtype(request):
         
 def delmealtype(request,meid):
         tbl_mealtype.objects.get(id=meid).delete()
-        return redirect("Admin:Mealtype")
+        return render(request,"Admin/Mealtype.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Mealtype")
 
 
 def Recipe(request):
@@ -414,7 +433,8 @@ def Editrecipe(request,reid):
 
 def delrecipe(request,reid):
         tbl_recipe.objects.get(id=reid).delete()
-        return redirect("Admin:Recipe")
+        return render(request,"Admin/Recipe.html",{'msgDelete':"Data Deleted Successfully"})
+        # return redirect("Admin:Recipe")
 
 def Foodcategory(request):
         foodcategorydata=tbl_foodcategory.objects.all() 
@@ -428,7 +448,9 @@ def Foodcategory(request):
     
 def delefoodcategory(request,fid):
         tbl_foodcategory.objects.get(id=fid).delete()
-        return redirect("Admin:Foodcategory")
+        return render(request,"Admin/Foodcategory.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Foodcategory")
 
 def Ingredients(request,rid):
         ingredientdata=tbl_ingredients.objects.all()
@@ -442,9 +464,12 @@ def Ingredients(request,rid):
         
         else:
                return render(request,"Admin/Addingredients.html",{'ingredientdata':ingredientdata,'rid':rid})
+        
 def delingredients(request,inid,rid):
         tbl_ingredients.objects.get(id=inid).delete()
-        return redirect("Admin:Ingredients",rid)
+        return render(request,"Admin/Ingredients.html",{'msgDelete':"Data Deleted Successfully", 'rid':rid})
+
+        # return redirect("Admin:Ingredients",rid)
 
 
 def Plan(request):
@@ -461,7 +486,9 @@ def Plan(request):
                return render(request,"Admin/Plan.html",{'plandata':plandata})
 def delplan(request,plid):
         tbl_plan.objects.get(id=plid).delete()
-        return redirect("Admin:Plan")
+        return render(request,"Admin/Plan.html",{'msgDelete':"Data Deleted Successfully"})
+
+        # return redirect("Admin:Plan")
 
 
 def Form(request):

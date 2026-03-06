@@ -1,0 +1,468 @@
+
+
+{% extends 'Guest/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grokit — about (full screen)</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafefa;
+            color: #1c2a22;
+            line-height: 1.5;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* FULL WIDE LAYOUT — no card, edge to edge */
+        .full-container {
+            max-width: 100%;
+        }
+
+        /* HERO — full width with background */
+        .hero-full {
+            background: linear-gradient(135deg, #1b4f2b 0%, #31743e 100%);
+            padding: 3rem 5% 3.5rem 5%;  /* reduced padding */
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%);
+        }
+
+        .hero-text {
+            flex: 2 1 400px;
+            max-width: 750px;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.2rem, 6vw, 3.5rem);  /* reduced from 5rem */
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: white;
+        }
+
+        .hero-text h1 i {
+            font-size: 2.5rem;  /* reduced from 3.5rem */
+            color: #ffd966;
+        }
+
+        .hero-text .lead {
+            font-size: 1.2rem;   /* reduced from 1.5rem */
+            font-weight: 400;
+            max-width: 650px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+            padding: 1rem 1.8rem;  /* reduced padding */
+            border-radius: 60px;    /* smaller radius */
+            border-left: 5px solid #f5b342;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .hero-image {
+            flex: 1 1 280px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 320px;       /* reduced from 400px */
+            height: auto;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%;
+            border: 6px solid rgba(255,255,240,0.7);
+            box-shadow: 0 25px 30px -15px #0f331b;
+        }
+
+        /* tagline banner full width */
+        .belief-banner {
+            background: #f0f7ec;
+            padding: 1.5rem 5%;      /* reduced from 2rem */
+            font-size: 1.1rem;        /* reduced from 1.4rem */
+            font-weight: 450;
+            border-bottom: 2px solid #cee3c6;
+            border-top: 2px solid #cee3c6;
+            color: #1a4828;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .belief-banner i {
+            background: #31743e;
+            color: white;
+            border-radius: 50%;
+            padding: 0.6rem;          /* reduced from 0.8rem */
+            width: 2.4rem;             /* reduced from 3rem */
+            text-align: center;
+            margin-right: 0.8rem;      /* reduced from 1.2rem */
+            font-size: 1rem;
+        }
+
+        /* MISSION + OFFER — full width grid */
+        .full-grid-section {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .mission-half {
+            background: #e5f2df;
+            flex: 1 1 400px;
+            padding: 3rem 5%;          /* reduced from 4rem */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mission-half h2, .offer-half h2 {
+            font-size: 2.2rem;          /* reduced from 2.8rem */
+            font-weight: 650;
+            margin-bottom: 1.2rem;       /* reduced from 1.8rem */
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .mission-half h2 i {
+            background: #1b4f2b;
+            color: white;
+            border-radius: 60%;
+            padding: 0.5rem;            /* reduced from 0.6rem */
+            font-size: 1.5rem;
+        }
+
+        .mission-half p {
+            font-size: 1.2rem;           /* reduced from 1.5rem */
+            max-width: 500px;
+            background: white;
+            padding: 1.5rem;             /* reduced from 2rem */
+            border-radius: 40px 40px 40px 20px;  /* smaller radius */
+            box-shadow: 15px 15px 0 #a8cf9c;     /* reduced shadow */
+        }
+
+        .offer-half {
+            background: #fef8e7;
+            flex: 1 1 400px;
+            padding: 3rem 5%;            /* reduced from 4rem */
+        }
+
+        .offer-grid-full {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;                   /* reduced from 1.2rem */
+            margin: 1.8rem 0 1.5rem 0;    /* reduced from 2.5rem */
+        }
+
+        .offer-item-full {
+            background: white;
+            padding: 0.7rem 1.2rem;       /* reduced from 1rem 1.5rem */
+            border-radius: 50px;           /* slightly smaller */
+            font-size: 1rem;               /* reduced from 1.2rem */
+            font-weight: 500;
+            box-shadow: 0 6px 10px #e2dbbd;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid #f5e2b2;
+        }
+
+        .offer-item-full i {
+            color: #3f8b4c;
+            font-size: 1rem;
+        }
+
+        .offer-half img {
+            width: 150px;                  /* reduced from 180px */
+            height: 110px;                 /* reduced from 140px */
+            object-fit: cover;
+            border-radius: 30px 15px 30px 15px;  /* smaller radius */
+            margin-top: 0.8rem;
+            border: 4px solid white;
+            box-shadow: 0 15px 20px -8px #aaad7a;
+        }
+
+        /* WHY CHOOSE US — full width with side image */
+        .why-full {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            background: #f2f7f0;
+        }
+
+        .why-content {
+            flex: 2 1 450px;
+            padding: 3rem 5%;            /* reduced from 4rem */
+        }
+
+        .why-content h2 {
+            font-size: 2.2rem;            /* reduced from 2.8rem */
+            font-weight: 700;
+            color: #174526;
+            margin-bottom: 1.5rem;        /* reduced from 2rem */
+        }
+
+        .why-list-full {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem 1.8rem;            /* reduced from 1.5rem 2.5rem */
+            max-width: 700px;
+        }
+
+        .why-point-full {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;                 /* reduced from 1rem */
+            font-size: 1rem;              /* reduced from 1.25rem */
+            font-weight: 500;
+            background: white;
+            padding: 0.6rem 1.3rem;       /* reduced from 0.8rem 1.6rem */
+            border-radius: 30px;           /* smaller radius */
+            box-shadow: 0 5px 12px #d2e2cd;
+        }
+
+        .why-point-full i {
+            background: #2e7d32;
+            color: white;
+            border-radius: 50%;
+            padding: 0.5rem;              /* reduced from 0.6rem */
+            font-size: 0.8rem;
+            width: 2rem;
+            text-align: center;
+        }
+
+        .why-image-side {
+            flex: 1 1 350px;
+            background: url('https://images.pexels.com/photos/4498139/pexels-photo-4498139.jpeg?auto=compress&cs=tinysrgb&w=600') center/cover no-repeat;
+            min-height: 320px;             /* reduced from 380px */
+            position: relative;
+        }
+
+        .why-image-side::after {
+            content: "✨ fast & fresh";
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: #fffaec;
+            padding: 0.5rem 1.5rem;       /* reduced from 0.8rem 2rem */
+            border-radius: 40px;
+            font-weight: 600;
+            color: #174526;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+            font-size: 1rem;               /* reduced from 1.3rem */
+        }
+
+        /* COMMITMENT + THANKS — full width split */
+        .commitment-full {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            background: #1d3924;
+            color: white;
+        }
+
+        .commit-text {
+            flex: 3 1 500px;
+            padding: 3rem 5%;             /* reduced from 4rem */
+        }
+
+        .commit-text p {
+            font-size: 1.2rem;            /* reduced from 1.6rem */
+            max-width: 750px;
+            font-weight: 350;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;        /* reduced from 2rem */
+        }
+
+        .commit-text p.strong {
+            font-size: 1.7rem;            /* reduced from 2.2rem */
+            font-weight: 600;
+            color: #ffda8b;
+        }
+
+        .commit-image {
+            flex: 1 1 300px;
+            background: url('https://images.pexels.com/photos/4393429/pexels-photo-4393429.jpeg?auto=compress&cs=tinysrgb&w=600') center/cover no-repeat;
+            min-height: 280px;             /* reduced from 350px */
+        }
+
+        /* footer thank you note */
+        .thanks-strip {
+            background: #f5e9cf;
+            padding: 1.5rem 5%;           /* reduced from 2rem */
+            text-align: center;
+            font-size: 1.2rem;             /* reduced from 1.6rem */
+            font-weight: 500;
+            color: #1b4f2b;
+            border-top: 4px solid #c5d6b5;
+        }
+
+        .thanks-strip i {
+            background: #1b4f2b;
+            color: #f5e9cf;
+            padding: 0.6rem;              /* reduced from 0.8rem */
+            border-radius: 50%;
+            margin: 0 0.6rem;             /* reduced from 0.8rem */
+            font-size: 1rem;
+        }
+
+        /* tiny extra image near belief */
+        .belief-banner img {
+            width: 42px;                   /* slightly smaller */
+            height: 42px;
+            border-radius: 50%;
+            margin-left: 10px;
+            border: 2px solid white;
+            vertical-align: middle;
+        }
+
+        /* extra small text */
+        .hero-text .hero-stats span {
+            font-size: 1rem;               /* added */
+        }
+
+        .hero-text .hero-stats {
+            font-size: 1rem;
+            gap: 1rem;
+        }
+
+        /* RWD */
+        @media (max-width: 700px) {
+            .hero-full { clip-path: none; padding-bottom: 2rem; }
+            .why-list-full { grid-template-columns: 1fr; }
+            .offer-grid-full { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="full-container">
+
+        <!-- HERO section full bleed (image right) -->
+        <div class="hero-full">
+            <div class="hero-text">
+                <h1>
+                    About Grokit
+                    <i class="fas fa-seedling"></i>
+                </h1>
+                <p class="lead">Welcome to Grokit — your trusted online destination for fresh groceries, daily essentials, and quality products delivered right to your doorstep.</p>
+                <div style="display: flex; gap: 1.2rem; margin-top: 1.2rem; font-size: 1rem; flex-wrap: wrap;">
+                    <span><i class="fas fa-check-circle"></i> 100% fresh</span>
+                    <span><i class="fas fa-truck"></i> doorstep delivery</span>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- hero image: fresh basket (pexels) -->
+                <img src="https://i.pinimg.com/736x/35/05/97/350597b293bc3a9c0cad76e425162f9a.jpg" alt="Grokit fresh basket">
+            </div>
+        </div>
+
+        <!-- Belief statement full width (with tiny inline image) -->
+        <div class="belief-banner">
+            <i class="fas fa-heart"></i>
+            <span>At Grokit, we believe grocery shopping should be simple, affordable, and stress‑free. That’s why we carefully select fresh fruits, vegetables, pantry staples, dairy, and household essentials — so you get the best quality every time.
+            From farm to doorstep, we are committed to delivering freshness you can trust and service you can rely on.
+            Our goal is to save your time while bringing the market closer to your home.
+            With every order, we strive to make your daily shopping experience smoother and more convenient.
+            </span>
+            <!-- minimal inline image (very small, not dominating) -->
+            <img src="https://i.pinimg.com/originals/01/16/e7/0116e7f1d982b262b1af79d8c1159564.gif" 
+            alt="mushroom" 
+            style="width: 130px; height: auto; margin-left: 15px;">
+        </div>
+
+        <!-- MISSION + OFFER side by side full width (each 50%) -->
+        <div class="full-grid-section">
+            <div class="mission-half">
+                <h2><i class="fas fa-bullseye"></i> 🌿 Our Mission</h2>
+                <p>To make everyday shopping convenient while maintaining freshness, affordability, and customer satisfaction.</p>
+                <!-- tiny texture image (optional) but we keep minimal, not adding extra -->
+            </div>
+            <div class="offer-half">
+                <h2><i class="fas fa-store"></i> 🛒 What We Offer</h2>
+                <div class="offer-grid-full">
+                    <div class="offer-item-full"><i class="fas fa-apple-alt"></i> Farm-fresh fruits & veg</div>
+                    <div class="offer-item-full"><i class="fas fa-seedling"></i> Quality rice, grains, pulses</div>
+                    <div class="offer-item-full"><i class="fas fa-cheese"></i> Dairy and bakery products</div>
+                    <div class="offer-item-full"><i class="fas fa-cookie-bite"></i> Packaged foods & snacks</div>
+                    <div class="offer-item-full"><i class="fas fa-soap"></i> Household & personal care</div>
+                </div>
+                <!-- one relevant image in offer half (moderate size) -->
+                <img src="https://i.pinimg.com/1200x/8d/cc/bd/8dccbdd4309c7cbecc910be8d3e7c129.jpg" alt="dairy and grains">
+                <img src="https://i.pinimg.com/736x/e2/39/d7/e239d7ad7a2b4c365ba0ddee9ef19d71.jpg" alt="dairy and grains">
+                <img src="https://i.pinimg.com/1200x/b3/ac/77/b3ac7733c4c0f81d13b5024bebae3408.jpg" alt="dairy and grains">
+
+                <img src="https://i.pinimg.com/736x/e2/39/d7/e239d7ad7a2b4c365ba0ddee9ef19d71.jpg" alt="dairy and grains">
+
+
+            </div>
+        </div>
+
+        <!-- WHY CHOOSE US full width with background image on right -->
+        <div class="why-full">
+            <div class="why-content">
+                <h2>🚚 Why Choose Grokit?</h2>
+                <div class="why-list-full">
+                    <div class="why-point-full"><i class="fas fa-leaf"></i> Fresh & hygienic packing</div>
+                    <div class="why-point-full"><i class="fas fa-mouse-pointer"></i> Easy online ordering</div>
+                    <div class="why-point-full"><i class="fas fa-clock"></i> Reliable timely delivery</div>
+                    <div class="why-point-full"><i class="fas fa-tag"></i> Affordable prices</div>
+                    <div class="why-point-full"><i class="fas fa-headset"></i> Friendly customer support</div>
+                    <div class="why-point-full"><i class="fas fa-lock"></i> Trusted quality</div>
+                </div>
+                <!-- extra small text line to fill -->
+                <p style="margin-top: 1.5rem; font-size: 1rem;"><i class="fas fa-star" style="color: #f5b342;"></i> 100% satisfaction guarantee</p>
+            </div>
+            <div class="why-image-side">
+                <!-- background image set in css, no need for extra img tag (still counts as image) -->
+            </div>
+        </div>
+
+        <!-- COMMITMENT + THANKS + image -->
+        <div class="commitment-full">
+            <div class="commit-text">
+                <p class="strong">We are committed to building a grocery experience that saves you time and ensures quality you can trust.</p>
+                <p>Whether it’s your daily vegetables or monthly provisions, Grokit is here to serve you.</p>
+                <p style="font-size: 1.5rem; margin-top: 1.5rem;">💚 Thank you for choosing Grokit. We look forward to being a part of your everyday life.</p>
+            </div>
+            <div class="commit-image">
+                <!-- background image: delivery or vegetables -->
+            </div>
+        </div>
+
+        <!-- final gratitude strip (no extra image, just icons) -->
+        <div class="thanks-strip">
+            <i class="fas fa-carrot"></i> Grokit – fresh from us to you <i class="fas fa-basket-shopping"></i>
+        </div>
+
+        <!-- total images used: hero img (1), belief inline tiny (2), offer-half img (3), why background (4), commit background (5). exactly five – not too much, and all add value. also the belief image is very small. -->
+        <!-- The page is fully edge-to-edge, no card effect, full screen sections. -->
+    </div>
+</body>
+</html>
+
+{% endblock content %}

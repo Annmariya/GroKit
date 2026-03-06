@@ -158,4 +158,5 @@ def Viewproduct(request,):
 
 
 
-        
+def aboutus(request):
+             return render(request,"Guest/Aboutus.html")

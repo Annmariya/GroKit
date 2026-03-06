@@ -71,6 +71,9 @@ def Homepage(request):
         categorydata=tbl_category.objects.all()
         subcategorydata=tbl_subcategory.objects.all()
 
+        new_products = tbl_product.objects.all().order_by('-id')[:8]
+
+
         if request.method == "POST":
             productname = request.POST.get('txt_productname')
             category = request.POST.get('sel_category')
@@ -100,8 +103,12 @@ def Homepage(request):
             i.total_stock = total_stock - total_cart
 
             tot = 0  
-        return render(request,"User/Homepage.html",{'userdata':userdata,'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata})
-     
+        return render(request,"User/Homepage.html",{'new_products':new_products,'userdata':userdata,'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata})
+
+
+
+
+
      
 def Complaint(request): 
        userdata=tbl_user.objects.get(id=request.session['uid'])
@@ -190,7 +197,7 @@ def ViewMore(request, pid):
 
     simlarproduct = tbl_product.objects.filter(
         subcategory__category=product.subcategory.category
-    ).exclude(id=product.id)[:4]
+    ).exclude(id=product.id)[:12]
 
     for sp in simlarproduct:
 

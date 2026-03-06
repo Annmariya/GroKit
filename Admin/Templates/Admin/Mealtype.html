@@ -120,7 +120,8 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input type="text" name="txt_mealtype" placeholder="Enter meal type" required>
+                <input type="text" name="txt_mealtype" placeholder="Enter meal type"title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter" 
+                pattern="^[A-Z]+[a-zA-Z ]*$" required>
                 <input type="time" name="txt_fromtime" required>
                 <input type="time" name="txt_totime" required>
                 <input type="submit" value="Submit">
@@ -264,6 +265,110 @@
 
 <script>
 function closePopup() {
+    window.location.href = "{% url 'Admin:Mealtype' %}";
+}
+</script>
+{% endif %}
+
+
+<!-- DElete message -->
+{% if msgDelete %}
+
+<style>
+/* Overlay */
+.delete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Popup Card */
+.delete-popup {
+    background: #ffffff;
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    animation: popupScale 0.3s ease forwards;
+}
+
+/* Icon */
+.delete-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff4d4d, #ff944d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    animation: pulse 1s infinite;
+}
+
+.delete-icon svg {
+    width: 40px;
+    height: 40px;
+    color: #fff;
+}
+
+/* Button */
+.delete-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #ff4d4d, #ff944d);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-btn:hover {
+    opacity: 0.9;
+}
+
+/* Animations */
+@keyframes popupScale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+</style>
+
+<div class="delete-overlay">
+    <div class="delete-popup">
+        <div class="delete-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7L5 17M5 7l14 10"></path>
+            </svg>
+        </div>
+        <h2 style="color:#333;">Deleted!</h2>
+        <p style="color:#666; margin-top:8px;">{{ msgDelete }}</p>
+        <button class="delete-btn" onclick="closeDeletePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+function closeDeletePopup() {
     window.location.href = "{% url 'Admin:Mealtype' %}";
 }
 </script>
