@@ -133,12 +133,14 @@ def Viewproduct(request):
     branddata=tbl_brand.objects.all()
     categorydata=tbl_category.objects.all()
     subcategorydata=tbl_subcategory.objects.all()
+    placedata=tbl_seller.objects.all()
 
     if request.method == "POST":
          productname = request.POST.get('txt_productname')
          category = request.POST.get('sel_category')
          subcategory = request.POST.get('sel_subcategory')
          brand = request.POST.get('sel_brand')
+         place=request.POST.get('sel_place')
 
          productviewdata = tbl_product.objects.all()
          if productname:
@@ -149,7 +151,8 @@ def Viewproduct(request):
             productviewdata = productviewdata.filter(subcategory_id=subcategory)
          if brand:
             productviewdata = productviewdata.filter(brand_id=brand)
-    
+         if place:
+             productviewdata = productviewdata.filter(seller_place_id=place)    
     
     for i in productviewdata:
         total_stock = tbl_stock.objects.filter(
@@ -164,7 +167,7 @@ def Viewproduct(request):
         i.total_stock = total_stock - total_cart
         tot = 0
        
-    return render(request,"User/Viewproduct.html",{'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata})
+    return render(request,"User/Viewproduct.html",{'productviewdata':productviewdata,'branddata':branddata,'categorydata':categorydata,'subcategorydata':subcategorydata,'placedata':placedata})
 
 
 def ViewMore(request, pid):
@@ -540,6 +543,7 @@ def Viewdietinfo(request):
     if 'uid' not in request.session:
         return redirect('login')
     user = tbl_user.objects.get(id=request.session['uid'])
+   
     if not check_subscription(user):
         return redirect("User:ViewSubscription")
     viewdata=tbl_recipe.objects.all()  

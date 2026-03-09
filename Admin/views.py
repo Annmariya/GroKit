@@ -85,7 +85,7 @@ def editdistrict(request,did):
 def editcategory(request,cid):
         editdata=tbl_category.objects.get(id=cid)
         if request.method=="POST":
-                category=request.POST.get("txt_category")
+                category=request.POST.get("txt_category").strip().title()
                 editdata.category_name=category
                 editdata.save()
                 return render(request,"Admin/Category.html",{'msg':"Data Updated!..."})

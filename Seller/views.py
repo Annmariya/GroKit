@@ -119,6 +119,7 @@ def delestock(request,soid,pid):
 
 
 def Gallery(request,pid):
+        sellerdata=tbl_seller.objects.get(id=request.session['sid'])
         gallerydata=tbl_gallery.objects.all() 
         Product=tbl_product.objects.get(id=pid)
         if request.method=="POST":
@@ -126,7 +127,7 @@ def Gallery(request,pid):
                 tbl_gallery.objects.create(gallery_photo=photo,product=Product)
                 return render(request,"Seller/Gallery.html",{'msg':"Data inserted",'pid':pid})
         else:
-               return render(request,"Seller/Gallery.html",{'gallerydata':gallerydata,'pid':pid})
+               return render(request,"Seller/Gallery.html",{'gallerydata':gallerydata,  'sellerdata':sellerdata, 'pid':pid})
 
 
 

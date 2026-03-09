@@ -244,9 +244,9 @@
                     <li class="nav-item active">
                       <a href="{% url 'User:Homepage' %}" class="nav-link">Home</a>
                     </li>
-                    <li class="nav-item active">
-                      <a href="{% url 'User:Myprofile' %}" class="nav-link">Profile</a>
-                    </li>
+                    <!-- <li class="nav-item active">
+                      <a href="" class="nav-link">Profile</a>
+                    </li> -->
                     <li class="nav-item active">
                       <a href="{% url 'User:Viewproduct' %}" class="nav-link">Viewproduct</a>
                     </li>
@@ -256,11 +256,23 @@
                     <li class="nav-item">
                       <a href="{% url 'User:MyBooking' %}" class="nav-link">Mybooking</a>
                     </li>
-                    <li class="nav-item">
-                      <a href="{% url 'User:Payment' %}" class="nav-link">Payment</a>
+                    <li class="nav-item active">
+                      <a href="{% url 'User:Viewrecipe' %}" class="nav-link">Viewrecipe</a>
                     </li>
                     <li class="nav-item">
+                      <a href="{% url 'User:timerecipe' %}" class="nav-link">Timerecipe</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                      <a href="" class="nav-link">Payment</a>
+                    </li> -->
+                    <li class="nav-item">
                       <a href="{% url 'User:Complaint' %}" class="nav-link">Complaint</a>
+                    </li>
+                    <li class="nav-item active">
+                      <a href="{% url 'User:ViewSubscription' %}" class="nav-link">ViewSubscription</a>
+                    </li>
+                    <li class="nav-item active">
+                      <a href="{% url 'User:Viewdietinfo' %}" class="nav-link">Viewdietinfo</a>
                     </li>
                     <!-- <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>

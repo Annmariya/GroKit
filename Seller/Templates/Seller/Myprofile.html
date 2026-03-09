@@ -1,57 +1,383 @@
+{% extends 'Seller/Head.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>My Profile</title>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Profile Container */
+        .profile-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Profile Header with Cover Photo */
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-header h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        /* Profile Image */
+        .profile-image-container {
+            position: relative;
+            margin-top: -50px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid rgb(192, 135, 135);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            background: white;
+        }
+
+        /* Profile Info Table */
+        .profile-info {
+            padding: 30px 30px 20px;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s ease;
+        }
+
+        .info-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .info-table td {
+            padding: 15px 10px;
+            border: none;
+        }
+
+        .info-table td:first-child {
+            font-weight: 600;
+            color: #555;
+            width: 120px;
+            font-size: 14px;
+        }
+
+        .info-table td:first-child i {
+            color: #667eea;
+            width: 25px;
+            font-size: 16px;
+        }
+
+        .info-table td:last-child {
+            color: #333;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        /* Action Buttons */
+        .profile-actions {
+            padding: 20px 30px 30px;
+            text-align: center;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 0 8px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-password {
+            background: #f8f9fa;
+            color: #555;
+            border: 2px solid #e1e1e1;
+        }
+
+        .btn-password:hover {
+            background: #e9ecef;
+            color: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit i, .btn-password i {
+            margin-right: 8px;
+        }
+
+        /* Badge for seller type */
+        .seller-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* Stats Section */
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            margin: 0 30px 20px;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .profile-card {
+                margin: 10px;
+            }
+            
+            .profile-info {
+                padding: 20px;
+            }
+            
+            .info-table td:first-child {
+                width: 100px;
+                font-size: 13px;
+            }
+            
+            .info-table td:last-child {
+                font-size: 14px;
+            }
+            
+            .action-btn {
+                display: block;
+                margin: 10px 0;
+            }
+            
+            .profile-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Animation for table rows */
+        .info-table tr {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .info-table tr:nth-child(1) { animation-delay: 0.1s; }
+        .info-table tr:nth-child(2) { animation-delay: 0.2s; }
+        .info-table tr:nth-child(3) { animation-delay: 0.3s; }
+        .info-table tr:nth-child(4) { animation-delay: 0.4s; }
+        .info-table tr:nth-child(5) { animation-delay: 0.5s; }
+        .info-table tr:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Tooltip for established date */
+        .date-tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .date-tooltip:hover:after {
+            content: 'Member since this date';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Image hover effect */
+        .profile-image {
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-<center>
-    <h1>MyProfile</h1>
-<table border="2" cellpadding="5" cellspacing="1" width="300">
-    <tr>
-        <td colspan="2" align="center">
-            <img src="{{sellerdata.seller_ownerproof.url}}" alt="Profile Image" width="80" height="80">
-        </td>
-    </tr>
+    <div class="profile-wrapper">
+        <div class="profile-card">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <h1><i class="fas fa-store"></i> Seller Profile</h1>
+                <p>Manage your seller account information</p>
+                <div class="seller-badge">
+                    <i class="fas fa-check-circle"></i> Verified Seller
+                </div>
+            </div>
 
-    <tr>
-        <td><b>Name</b></td>
-        <td>{{sellerdata.seller_name}}</td>
-    </tr>
+            <br><br>
+            <!-- Profile Image -->
+            <div class="profile-image-container">
+                <img src="https://i.pinimg.com/736x/62/1b/bd/621bbd4ac787bcc2059fbbd0d2738c93.jpg" alt="Profile Image" class="profile-image">
+            </div>
 
-    <tr>
-        <td><b>Email</b></td>
-        <td>{{sellerdata.seller_email}}</td>
-    </tr>
+            <!-- Profile Information -->
+            <div class="profile-info">
+                <table class="info-table" border="0" cellpadding="5" cellspacing="1" width="100%">
+                    <tr>
+                        <td><i class="fas fa-user"></i> <b>Name</b></td>
+                        <td>{{sellerdata.seller_name}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-envelope"></i> <b>Email</b></td>
+                        <td>{{sellerdata.seller_email}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-phone"></i> <b>Contact</b></td>
+                        <td>{{sellerdata.seller_contact}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-calendar"></i> <b>Established</b></td>
+                        <td class="date-tooltip">{{sellerdata.seller_establishdate}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-map-marker-alt"></i> <b>District</b></td>
+                        <td>{{sellerdata.seller_place.district.district_name}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-location-dot"></i> <b>Place</b></td>
+                        <td>{{sellerdata.seller_place.place_name}}</td>
+                    </tr>
+                </table>
+            </div>
 
-    <tr>
-        <td><b>Contact</b></td>
-        <td>{{sellerdata.seller_contact}}</td>
-    </tr>
+            <!-- Quick Stats (Optional - you can remove if not needed) -->
+            <!-- <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">25+</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">150+</div>
+                    <div class="stat-label">Sales</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4.8</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+            </div> -->
 
-    <tr>
-        <td><b>Established Date</b></td>
-        <td>{{sellerdata.seller_establishdate}}</td>
-    </tr>
-
-    <tr>
-        <td><b>District</b></td>
-        <td>{{sellerdata.seller_place.district.district_name}}</td>
-    </tr>
-
-    <tr>
-        <td><b>Place</b></td>
-        <td>{{sellerdata.seller_place.place_name}} </td>
-    </tr>
-
-    <tr>
-        <td colspan="2" align="center">
-            <a href="{% url 'Seller:Editprofile' %}">Edit Profile</a>  |
-            <a href="{% url 'Seller:Changepassword' %}">ChangePassword</a>
-        </td>
-    </tr>
-
-</table>
-</center>
-
+            <!-- Action Buttons -->
+            <div class="profile-actions">
+                <a href="{% url 'Seller:Editprofile' %}" class="action-btn btn-edit">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+                <a href="{% url 'Seller:Changepassword' %}" class="action-btn btn-password">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+
+{% endblock content %}
