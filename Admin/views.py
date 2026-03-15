@@ -402,31 +402,6 @@ def Recipe(request):
 
 
 
-def Editrecipe(request,reid):
-    foodcategorydata=tbl_foodcategory.objects.all()
-    mealdata=tbl_mealtype.objects.all()
-    recipedata=tbl_recipe.objects.get(id=reid)
-    if request.method=="POST":
-         meal=tbl_mealtype.objects.get(id=request.POST.get("sel_mealtype"))
-         foodcategory=tbl_foodcategory.objects.get(id=request.POST.get("sel_foodcategory"))
-         recipename=request.POST.get('txt_name')
-         recipedetails=request.POST.get('txt_details')
-         dietinfo=request.POST.get('txt_dietinfo')
-         file=request.FILES.get('txt_file')
-         video=request.FILES.get('txt_video')
-         recipedata.recipe_name=recipename
-         recipedata.recipe_details=recipedetails
-         recipedata.diet_info=dietinfo
-         recipedata.mealtype=meal
-         recipedata.foodcategory=foodcategory
-         if file:  # update only if new image selected
-            recipedata.recipe_file=file
-         if video:  # update only if new video selected
-            recipedata.recipe_video=video
-         recipedata.save()
-         return render(request,"Admin/Editrecipe.html",{'msg':'Data Updated'})
-    else:
-        return render(request,"Admin/Editrecipe.html",{'recipedata':recipedata,'foodcategorydata':foodcategorydata,'mealdata':mealdata})
 
 
 

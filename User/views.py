@@ -133,7 +133,7 @@ def Viewproduct(request):
     branddata=tbl_brand.objects.all()
     categorydata=tbl_category.objects.all()
     subcategorydata=tbl_subcategory.objects.all()
-    placedata=tbl_seller.objects.all()
+    placedata=tbl_place.objects.all()
 
     if request.method == "POST":
          productname = request.POST.get('txt_productname')
@@ -152,7 +152,7 @@ def Viewproduct(request):
          if brand:
             productviewdata = productviewdata.filter(brand_id=brand)
          if place:
-             productviewdata = productviewdata.filter(seller_place_id=place)    
+             productviewdata = productviewdata.filter(seller__seller_place_id=place)    
     
     for i in productviewdata:
         total_stock = tbl_stock.objects.filter(

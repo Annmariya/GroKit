@@ -25,7 +25,6 @@ class tbl_seller(models.Model):
     seller_licenseproof=models.FileField(upload_to ='Assets/SellerDocs')
     seller_ownerproof=models.FileField(upload_to ='Assets/SellerDocs')
     seller_status=models.IntegerField(default=0)
-amnb
 
 class tbl_deliveryboy(models.Model):
     delivery_name=models.CharField(max_length=50)

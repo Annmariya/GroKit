@@ -80,7 +80,9 @@ def Product(request):
                 details=request.POST.get("txt_productdetails")
                 photo=request.FILES.get("txt_photo")
                 price=request.POST.get("txt_price")
-                tbl_product.objects.create(product_name=name,product_details=details,product_price=price,product_photo=photo,subcategory=subcategory,brand=brand,seller=sellerdata)
+                weight=request.POST.get("txt_weight")
+                unit=request.POST.get("sel_unit")
+                tbl_product.objects.create(product_name=name,product_details=details,product_price=price,product_photo=photo,subcategory=subcategory,brand=brand,seller=sellerdata,product_weight=weight, weight_unit=unit)
                 return render(request,"Seller/Product.html",{'msg':"Data inserted"})
         
         else:
@@ -91,6 +93,28 @@ def Ajaxproduct(request):
         subcategorydata=tbl_subcategory.objects.filter(category=categoryid)
         return render(request,"Seller/Ajaxproduct.html",{'subcategorydata':subcategorydata})
 
+
+def Edit(request):
+    subcategorydata=tbl_subcategory.objects.all()
+    categorydata=tbl_category.objects.all()
+    branddata=tbl_brand.objects.all()
+    productdata = tbl_product.objects.all()
+    if request.method=="POST":
+                brand=tbl_brand.objects.get(id=request.POST.get("sel_brand"))
+                subcategory=tbl_subcategory.objects.get(id=request.POST.get("sel_subcategory"))
+                # district=tbl_district.objects.get(id=request.POST.get("sel_district"))
+                name=request.POST.get("txt_productname")
+                details=request.POST.get("txt_productdetails")
+                photo=request.FILES.get("txt_photo")
+                price=request.POST.get("txt_price")
+                weight=request.POST.get("txt_weight")
+                unit=request.POST.get("sel_unit")
+                if photo:  # update only if new image selected
+                    productdata.product_photo=photo
+                productdata.save()
+                return render(request,"Admin/Editrecipe.html",{'msg':'Data Updated'})
+    else:
+        return render(request,"Admin/Editrecipe.html",{'recipedata':recipedata,'foodcategorydata':foodcategorydata,'mealdata':mealdata})
 
 
 def delproduct(request,pid):

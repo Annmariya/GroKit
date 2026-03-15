@@ -8,10 +8,18 @@ from User.models import*
 # Create your models here.
 
 class tbl_product(models.Model):
+    UNIT= [
+    ('kg', 'Kilogram'),   # weight
+    ('g', 'Gram'),        # weight
+    ('l', 'Litre'),       # volume
+    ('ml', 'Millilitre'), # volume
+]
     product_name=models.CharField(max_length=50)
     product_details=models.CharField(max_length=60)
     product_price=models.IntegerField(max_length=50)
     product_photo=models.FileField(upload_to ='Assets/ProductDocs')
+    product_weight = models.IntegerField(null=True)
+    weight_unit = models.CharField(max_length=10, choices=UNIT,null=True,blank=True)
     subcategory=models.ForeignKey(tbl_subcategory,on_delete=models.CASCADE)
     brand=models.ForeignKey(tbl_brand,on_delete=models.CASCADE)
     seller=models.ForeignKey(tbl_seller,on_delete=models.CASCADE)
